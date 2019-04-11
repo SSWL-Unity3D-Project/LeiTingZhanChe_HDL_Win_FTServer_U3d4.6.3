@@ -12,16 +12,17 @@ public class BarcodeCam : MonoBehaviour
     //定义方法生成二维码
     private Color32[] Encode(string textForEncoding, int width, int height)
     {
-        var writer = new BarcodeWriter
-        {
-            Format = BarcodeFormat.QR_CODE,
-            Options = new QrCodeEncodingOptions
-            {
-                Height = height,
-                Width = width
-            }
-        };
-        return writer.Write(textForEncoding);
+        //var writer = new BarcodeWriter
+        //{
+        //    Format = BarcodeFormat.QR_CODE,
+        //    Options = new QrCodeEncodingOptions
+        //    {
+        //        Height = height,
+        //        Width = width
+        //    }
+        //};
+        //return writer.Write(textForEncoding);
+        return null;
     }
 
     /// <summary>

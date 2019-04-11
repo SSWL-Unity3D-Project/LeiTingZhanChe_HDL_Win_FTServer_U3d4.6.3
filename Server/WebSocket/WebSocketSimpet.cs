@@ -1,4 +1,4 @@
-﻿using LitJson;
+﻿//using LitJson;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -47,17 +47,17 @@ public class WebSocketSimpet : MonoBehaviour
 
         if (Time.frameCount % 30 == 0)
         {
-            if (m_SSBoxPostNet != null)
-            {
-                if (_wabData != null && _wabData.WebSocket != null)
-                {
-                    if (_wabData.WebSocket.IsOpen == true)
-                    {
-                        //网络正常时才允许访问后台配置数据.
-                        m_SSBoxPostNet.LoopGetGameConfigInfoFromHddServer();
-                    }
-                }
-            }
+            //if (m_SSBoxPostNet != null)
+            //{
+            //    if (_wabData != null && _wabData.WebSocket != null)
+            //    {
+            //        if (_wabData.WebSocket.IsOpen == true)
+            //        {
+            //            //网络正常时才允许访问后台配置数据.
+            //            m_SSBoxPostNet.LoopGetGameConfigInfoFromHddServer();
+            //        }
+            //    }
+            //}
 
             if (Time.time - m_TimeLastXinTiao >= 20f)
             {
@@ -87,13 +87,13 @@ public class WebSocketSimpet : MonoBehaviour
     /// </summary>
     void OnXinTiaoMsgTimeOutCloseWebScoket()
     {
-        if (_wabData != null
-            && _wabData.WebSocket != null
-            && _wabData.WebSocket.IsOpen == true)
-        {
-            SSDebug.LogWarning("OnXinTiaoMsgTimeOutCloseWebScoket::CloseWebSocket.......................................");
-            _wabData.CloseSocket();
-        }
+        //if (_wabData != null
+        //    && _wabData.WebSocket != null
+        //    && _wabData.WebSocket.IsOpen == true)
+        //{
+        //    SSDebug.LogWarning("OnXinTiaoMsgTimeOutCloseWebScoket::CloseWebSocket.......................................");
+        //    _wabData.CloseSocket();
+        //}
     }
 
     /// <summary>
@@ -178,24 +178,24 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData != null)
-        {
-            //设置服务器地址信息.
-            _wabData.Address = url;
+        //if (_wabData != null)
+        //{
+        //    //设置服务器地址信息.
+        //    _wabData.Address = url;
 
-            if (_wabData.WebSocket == null)
-            {
-                _wabData.OpenWebSocket();
-                Debug.Log("Unity:" + "Opening Web Socket -> url == " + url);
-            }
-            else
-            {
-                //Debug.Log("Unity:" + "Close Web Socket...");
-                //_wabData.WebSocket.Close();
-                Debug.Log("Unity:" + "Restart Open WebSocket...");
-                _wabData.RestartOpenWebSocket();
-            }
-        }
+        //    if (_wabData.WebSocket == null)
+        //    {
+        //        _wabData.OpenWebSocket();
+        //        Debug.Log("Unity:" + "Opening Web Socket -> url == " + url);
+        //    }
+        //    else
+        //    {
+        //        //Debug.Log("Unity:" + "Close Web Socket...");
+        //        //_wabData.WebSocket.Close();
+        //        Debug.Log("Unity:" + "Restart Open WebSocket...");
+        //        _wabData.RestartOpenWebSocket();
+        //    }
+        //}
     }
 
     bool IsClosedWebSocket = false;
@@ -204,17 +204,17 @@ public class WebSocketSimpet : MonoBehaviour
     /// </summary>
     public void CloseWebSocket()
     {
-        if (_wabData != null
-            && _wabData.WebSocket != null
-            && _wabData.WebSocket.IsOpen == true)
-        {
-            if (IsClosedWebSocket == false)
-            {
-                SSDebug.LogWarning("CloseWebSocket.......................................");
-                IsClosedWebSocket = true;
-                _wabData.CloseSocket();
-            }
-        }
+        //if (_wabData != null
+        //    && _wabData.WebSocket != null
+        //    && _wabData.WebSocket.IsOpen == true)
+        //{
+        //    if (IsClosedWebSocket == false)
+        //    {
+        //        SSDebug.LogWarning("CloseWebSocket.......................................");
+        //        IsClosedWebSocket = true;
+        //        _wabData.CloseSocket();
+        //    }
+        //}
     }
 
     bool IsCheckXinTiaoMsg = false;
@@ -235,56 +235,56 @@ public class WebSocketSimpet : MonoBehaviour
         }
 
         //是否需要重新打开游戏盒子.
-        bool isRestartOpenGameBox = false;
-        if (_wabData != null && _wabData.WebSocket != null)
-        {
-            if (_wabData.WebSocket.IsOpen == true)
-            {
-                //网络正常.
-                //心跳消息发送.
-                if (IsCheckXinTiaoMsg == false)
-                {
-                    m_TimeSendXinTiaoMsg = Time.time;
-                }
-                IsCheckXinTiaoMsg = true;
-                string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-                string msgToSend = boxNumber + "," + boxNumber + ",0,{\"_msg_name\":\"GameCenter_Logon\"}";
-                // Send message to the server.
-                _wabData.WebSocket.Send(msgToSend);
-#if UNITY_EDITOR
-                SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend + ", time == " + Time.time.ToString("f2"));
-#endif
-                if (XKGlobalData.GetInstance().IsDebugSocketXiTaoMsg == true)
-                {
-                    SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend + ", time == " + Time.time.ToString("f2"));
-                }
-                return;
-            }
-            else
-            {
-                isRestartOpenGameBox = true;
-            }
-        }
-        else
-        {
-            isRestartOpenGameBox = true;
-        }
+//        bool isRestartOpenGameBox = false;
+//        if (_wabData != null && _wabData.WebSocket != null)
+//        {
+//            if (_wabData.WebSocket.IsOpen == true)
+//            {
+//                //网络正常.
+//                //心跳消息发送.
+//                if (IsCheckXinTiaoMsg == false)
+//                {
+//                    m_TimeSendXinTiaoMsg = Time.time;
+//                }
+//                IsCheckXinTiaoMsg = true;
+//                string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+//                string msgToSend = boxNumber + "," + boxNumber + ",0,{\"_msg_name\":\"GameCenter_Logon\"}";
+//                // Send message to the server.
+//                _wabData.WebSocket.Send(msgToSend);
+//#if UNITY_EDITOR
+//                SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend + ", time == " + Time.time.ToString("f2"));
+//#endif
+//                if (XKGlobalData.GetInstance().IsDebugSocketXiTaoMsg == true)
+//                {
+//                    SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> msgToSend == " + msgToSend + ", time == " + Time.time.ToString("f2"));
+//                }
+//                return;
+//            }
+//            else
+//            {
+//                isRestartOpenGameBox = true;
+//            }
+//        }
+//        else
+//        {
+//            isRestartOpenGameBox = true;
+//        }
 
-        if (isRestartOpenGameBox == true)
-        {
-            //需要重新打开游戏盒子.
-            //心跳消息检测失败.
-            SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> Restart game box! time == " + Time.time.ToString("f2"));
-            SSDebug.LogWarning("XinTiao Check TimeOut...........................");
-            if (m_SSBoxPostNet != null)
-            {
-                //重置心跳消息标记.
-                IsCheckXinTiaoMsg = false;
-                m_TimeSendXinTiaoMsg = Time.time;
-                //重新登录游戏盒子并且重新连接游戏服务器.
-                m_SSBoxPostNet.HttpSendPostLoginBox();
-            }
-        }
+//        if (isRestartOpenGameBox == true)
+//        {
+//            //需要重新打开游戏盒子.
+//            //心跳消息检测失败.
+//            SSDebug.LogWarning("NetSendWebSocketXinTiaoMsg -> Restart game box! time == " + Time.time.ToString("f2"));
+//            SSDebug.LogWarning("XinTiao Check TimeOut...........................");
+//            if (m_SSBoxPostNet != null)
+//            {
+//                //重置心跳消息标记.
+//                IsCheckXinTiaoMsg = false;
+//                m_TimeSendXinTiaoMsg = Time.time;
+//                //重新登录游戏盒子并且重新连接游戏服务器.
+//                m_SSBoxPostNet.HttpSendPostLoginBox();
+//            }
+//        }
     }
 
     //bool IsInitGameWeiXinShouBingData = false;
@@ -349,17 +349,17 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            //boxNumber,boxNumber,用户ID,{ "_msg_object_str":{ "data":"","type":"topUp"},"_msg_name":"gamepad"}
-            string msgToSend = boxNumber + "," + boxNumber + "," + userId
-                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"topUp\"},\"_msg_name\":\"gamepad\"}";
+        //if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //{
+        //    string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //    //boxNumber,boxNumber,用户ID,{ "_msg_object_str":{ "data":"","type":"topUp"},"_msg_name":"gamepad"}
+        //    string msgToSend = boxNumber + "," + boxNumber + "," + userId
+        //        + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"topUp\"},\"_msg_name\":\"gamepad\"}";
 
-            SSDebug.Log("NetSendWeiXinPadShowTopUpPanel:: m_GamePadState == " + m_SSBoxPostNet.m_GamePadState);
-            SSDebug.Log("NetSendWeiXinPadShowTopUpPanel:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
+        //    SSDebug.Log("NetSendWeiXinPadShowTopUpPanel:: m_GamePadState == " + m_SSBoxPostNet.m_GamePadState);
+        //    SSDebug.Log("NetSendWeiXinPadShowTopUpPanel:: msg == " + msgToSend);
+        //    _wabData.WebSocket.Send(msgToSend);
+        //}
     }
     
     /// <summary>
@@ -372,16 +372,16 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            //boxNumber,boxNumber,用户ID,{ "_msg_object_str":{ "data":"","type":"full"},"_msg_name":"gamepad"}
-            string msgToSend = boxNumber + "," + boxNumber + "," + userId
-                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"full\"},\"_msg_name\":\"gamepad\"}";
+        //if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //{
+        //    string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //    //boxNumber,boxNumber,用户ID,{ "_msg_object_str":{ "data":"","type":"full"},"_msg_name":"gamepad"}
+        //    string msgToSend = boxNumber + "," + boxNumber + "," + userId
+        //        + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"full\"},\"_msg_name\":\"gamepad\"}";
 
-            Debug.Log("NetSendWeiXinPadGamePlayerFull:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
+        //    Debug.Log("NetSendWeiXinPadGamePlayerFull:: msg == " + msgToSend);
+        //    _wabData.WebSocket.Send(msgToSend);
+        //}
         //NetSendWXPadPlayerCloseConnect(userId);
     }
     
@@ -395,16 +395,16 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"coupon"},"_msg_name":"gamepad"}
-            string msgToSend = boxNumber + "," + boxNumber + "," + userId
-                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"coupon\"},\"_msg_name\":\"gamepad\"}";
+        //if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //{
+        //    string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //    //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"coupon"},"_msg_name":"gamepad"}
+        //    string msgToSend = boxNumber + "," + boxNumber + "," + userId
+        //        + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"coupon\"},\"_msg_name\":\"gamepad\"}";
 
-            Debug.Log("NetSendWeiXinPadPlayerGetCoupon:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
+        //    Debug.Log("NetSendWeiXinPadPlayerGetCoupon:: msg == " + msgToSend);
+        //    _wabData.WebSocket.Send(msgToSend);
+        //}
     }
 
     /// <summary>
@@ -427,16 +427,16 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"CloseConnect","userId":"94164"},"_msg_name":"gamepad"}
-            string msgToSend = boxNumber + "," + boxNumber + "," + userId
-                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"CloseConnect\",\"userId\":\"" + userId + "\"},\"_msg_name\":\"gamepad\"}";
-            SSDebug.Log("NetSendWXPadPlayerCloseConnect:: msg == " + msgToSend);
-            //SSDebug.LogError("test **************** NetSendWXPadPlayerCloseConnect:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
+        //if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //{
+        //    string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //    //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"CloseConnect","userId":"94164"},"_msg_name":"gamepad"}
+        //    string msgToSend = boxNumber + "," + boxNumber + "," + userId
+        //        + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"CloseConnect\",\"userId\":\"" + userId + "\"},\"_msg_name\":\"gamepad\"}";
+        //    SSDebug.Log("NetSendWXPadPlayerCloseConnect:: msg == " + msgToSend);
+        //    //SSDebug.LogError("test **************** NetSendWXPadPlayerCloseConnect:: msg == " + msgToSend);
+        //    _wabData.WebSocket.Send(msgToSend);
+        //}
     }
     
     /// <summary>
@@ -449,16 +449,16 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            //boxNumber,boxNumber,用户ID,{ "_msg_object_str":{ "data":"","type":"anti_addication"},"_msg_name":"gamepad"}
-            string msgToSend = boxNumber + "," + boxNumber + "," + userId
-                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"anti_addication\"},\"_msg_name\":\"gamepad\"}";
-            SSDebug.Log("NetSendWXPadPlayerFangChenMiMsg:: msg == " + msgToSend);
-            //SSDebug.LogWarning("test ******************** NetSendWXPadPlayerFangChenMiMsg:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
+        //if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //{
+        //    string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //    //boxNumber,boxNumber,用户ID,{ "_msg_object_str":{ "data":"","type":"anti_addication"},"_msg_name":"gamepad"}
+        //    string msgToSend = boxNumber + "," + boxNumber + "," + userId
+        //        + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"anti_addication\"},\"_msg_name\":\"gamepad\"}";
+        //    SSDebug.Log("NetSendWXPadPlayerFangChenMiMsg:: msg == " + msgToSend);
+        //    //SSDebug.LogWarning("test ******************** NetSendWXPadPlayerFangChenMiMsg:: msg == " + msgToSend);
+        //    _wabData.WebSocket.Send(msgToSend);
+        //}
     }
 
     /// <summary>
@@ -491,45 +491,45 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
         
-        JsonData jd = JsonMapper.ToObject(message);
-        string msgType = jd["type"].ToString();
-        switch(msgType)
-        {
-            case "userInfo": //玩家登陆盒子信息.
-                {
-                    //{"data":{"sex":1,"headUrl":"http://game.hdiandian.com/h5/public/image/head/93124.jpg","userName":"666","userId":"93124"},"type":"userInfo"}
-                    PlayerWeiXinData playerDt = new PlayerWeiXinData();
-                    playerDt.sex = jd["data"]["sex"].ToString();
-                    playerDt.headUrl = jd["data"]["headUrl"].ToString();
-                    playerDt.userName = jd["data"]["userName"].ToString();
-                    playerDt.userId = Convert.ToInt32(jd["data"]["userId"].ToString());
-                    OnNetReceivePlayerLoginBoxMsg(playerDt);
-                    break;
-                }
-            case "ReleasePlayer": //玩家退出盒子或其他消息.
-                {
-                    //{"type":"ReleasePlayer","userId":"93124"}
-                    int userId = Convert.ToInt32(jd["userId"].ToString());
-                    OnNetReceivePlayerExitBoxMsg(userId);
-                    break;
-                }
-            case "directionAngle": //手柄方向消息.
-                {
-                    //{"data":53,"type":"directionAngle","userId":"93124"}
-                    string dirVal = jd["data"].ToString();
-                    int userId = Convert.ToInt32(jd["userId"].ToString());
-                    OnNetReceiveDirectionAngleMsg(dirVal, userId);
-                    break;
-                }
-            case "actionOperation": //手柄按键消息.
-                {
-                    //{"data":"fireBUp","type":"actionOperation","userId":"9"}
-                    string btVal = jd["data"].ToString();
-                    int userId = Convert.ToInt32(jd["userId"].ToString());
-                    OnNetReceiveActionOperationMsg(btVal, userId);
-                    break;
-                }
-        }
+        //JsonData jd = JsonMapper.ToObject(message);
+        //string msgType = jd["type"].ToString();
+        //switch(msgType)
+        //{
+        //    case "userInfo": //玩家登陆盒子信息.
+        //        {
+        //            //{"data":{"sex":1,"headUrl":"http://game.hdiandian.com/h5/public/image/head/93124.jpg","userName":"666","userId":"93124"},"type":"userInfo"}
+        //            PlayerWeiXinData playerDt = new PlayerWeiXinData();
+        //            playerDt.sex = jd["data"]["sex"].ToString();
+        //            playerDt.headUrl = jd["data"]["headUrl"].ToString();
+        //            playerDt.userName = jd["data"]["userName"].ToString();
+        //            playerDt.userId = Convert.ToInt32(jd["data"]["userId"].ToString());
+        //            OnNetReceivePlayerLoginBoxMsg(playerDt);
+        //            break;
+        //        }
+        //    case "ReleasePlayer": //玩家退出盒子或其他消息.
+        //        {
+        //            //{"type":"ReleasePlayer","userId":"93124"}
+        //            int userId = Convert.ToInt32(jd["userId"].ToString());
+        //            OnNetReceivePlayerExitBoxMsg(userId);
+        //            break;
+        //        }
+        //    case "directionAngle": //手柄方向消息.
+        //        {
+        //            //{"data":53,"type":"directionAngle","userId":"93124"}
+        //            string dirVal = jd["data"].ToString();
+        //            int userId = Convert.ToInt32(jd["userId"].ToString());
+        //            OnNetReceiveDirectionAngleMsg(dirVal, userId);
+        //            break;
+        //        }
+        //    case "actionOperation": //手柄按键消息.
+        //        {
+        //            //{"data":"fireBUp","type":"actionOperation","userId":"9"}
+        //            string btVal = jd["data"].ToString();
+        //            int userId = Convert.ToInt32(jd["userId"].ToString());
+        //            OnNetReceiveActionOperationMsg(btVal, userId);
+        //            break;
+        //        }
+        //}
     }
     
     public class PlayerWeiXinData
@@ -666,16 +666,16 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"startButton_show"},"_msg_name":"gamepad"}
-            string msgToSend = boxNumber + "," + boxNumber + "," + userId
-                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"startButton_show\"},\"_msg_name\":\"gamepad\"}";
+        //if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //{
+        //    string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //    //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"startButton_show"},"_msg_name":"gamepad"}
+        //    string msgToSend = boxNumber + "," + boxNumber + "," + userId
+        //        + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"startButton_show\"},\"_msg_name\":\"gamepad\"}";
 
-            //SSDebug.LogWarning("NetSendWeiXinPadShowStartBt:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
+        //    //SSDebug.LogWarning("NetSendWeiXinPadShowStartBt:: msg == " + msgToSend);
+        //    _wabData.WebSocket.Send(msgToSend);
+        //}
     }
 
     /// <summary>
@@ -689,16 +689,16 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"startButton_hide"},"_msg_name":"gamepad"}
-            string msgToSend = boxNumber + "," + boxNumber + "," + userId
-                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"startButton_hide\"},\"_msg_name\":\"gamepad\"}";
+        //if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //{
+        //    string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //    //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"startButton_hide"},"_msg_name":"gamepad"}
+        //    string msgToSend = boxNumber + "," + boxNumber + "," + userId
+        //        + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"startButton_hide\"},\"_msg_name\":\"gamepad\"}";
 
-            //SSDebug.LogWarning("NetSendWeiXinPadHiddenStartBt:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
+        //    //SSDebug.LogWarning("NetSendWeiXinPadHiddenStartBt:: msg == " + msgToSend);
+        //    _wabData.WebSocket.Send(msgToSend);
+        //}
     }
     #endregion
 
@@ -714,16 +714,16 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"lottery_show"},"_msg_name":"gamepad"}
-            string msgToSend = boxNumber + "," + boxNumber + "," + userId
-                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"lottery_show\"},\"_msg_name\":\"gamepad\"}";
+        //if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //{
+        //    string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //    //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"lottery_show"},"_msg_name":"gamepad"}
+        //    string msgToSend = boxNumber + "," + boxNumber + "," + userId
+        //        + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"lottery_show\"},\"_msg_name\":\"gamepad\"}";
 
-            //SSDebug.LogWarning("NetSendWeiXinPadShowChouJiangUI:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
+        //    //SSDebug.LogWarning("NetSendWeiXinPadShowChouJiangUI:: msg == " + msgToSend);
+        //    _wabData.WebSocket.Send(msgToSend);
+        //}
     }
 
     /// <summary>
@@ -737,16 +737,16 @@ public class WebSocketSimpet : MonoBehaviour
             return;
         }
 
-        if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
-        {
-            string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
-            //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"lottery_hide"},"_msg_name":"gamepad"}
-            string msgToSend = boxNumber + "," + boxNumber + "," + userId
-                + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"lottery_hide\"},\"_msg_name\":\"gamepad\"}";
+        //if (_wabData.WebSocket != null && _wabData.WebSocket.IsOpen)
+        //{
+        //    string boxNumber = m_SSBoxPostNet.m_BoxLoginData.boxNumber;
+        //    //boxNumber,boxNumber,用户ID,{"_msg_object_str":{"data":"","type":"lottery_hide"},"_msg_name":"gamepad"}
+        //    string msgToSend = boxNumber + "," + boxNumber + "," + userId
+        //        + ",{\"_msg_object_str\":{\"data\":\"\",\"type\":\"lottery_hide\"},\"_msg_name\":\"gamepad\"}";
 
-            //SSDebug.LogWarning("NetSendWeiXinPadHiddenChouJiangUI:: msg == " + msgToSend);
-            _wabData.WebSocket.Send(msgToSend);
-        }
+        //    //SSDebug.LogWarning("NetSendWeiXinPadHiddenChouJiangUI:: msg == " + msgToSend);
+        //    _wabData.WebSocket.Send(msgToSend);
+        //}
     }
     #endregion
 }

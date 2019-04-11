@@ -1,7 +1,7 @@
 ﻿//#define TEST_DAI_JIN_QUAN //测试代金券.
 using Assets.XKGame.Script.Comm;
 using Assets.XKGame.Script.Server.WebSocket;
-using LitJson;
+//using LitJson;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -382,38 +382,38 @@ public class SSBoxPostNet : MonoBehaviour
             {
                 case PostCmd.BoxLogin:
                     {
-                        JsonData jd = JsonMapper.ToObject(postData.text);
-                        m_BoxLoginRt = (BoxLoginRt)Convert.ToInt32(jd["code"].ToString());
-                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                        {
-                            m_BoxLoginDt.serverIp = jd["data"]["serverIp"].ToString();
-                            m_BoxLoginDt.token = jd["data"]["token"].ToString();
-                            SSDebug.LogWarning("Unity:"+"serverIp " + m_BoxLoginDt.serverIp + ", token " + m_BoxLoginDt.token);
-                            //ConnectWebSocketServer();
-                            StartCoroutine(DelayConnectWebSocketServer());
+                        //JsonData jd = JsonMapper.ToObject(postData.text);
+                        //m_BoxLoginRt = (BoxLoginRt)Convert.ToInt32(jd["code"].ToString());
+                        //if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        //{
+                        //    m_BoxLoginDt.serverIp = jd["data"]["serverIp"].ToString();
+                        //    m_BoxLoginDt.token = jd["data"]["token"].ToString();
+                        //    SSDebug.LogWarning("Unity:"+"serverIp " + m_BoxLoginDt.serverIp + ", token " + m_BoxLoginDt.token);
+                        //    //ConnectWebSocketServer();
+                        //    StartCoroutine(DelayConnectWebSocketServer());
 
-                            //删除网络故障,请检查网络并重启游戏.
-                            //if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                            //{
-                            //    SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
-                            //}
+                        //    //删除网络故障,请检查网络并重启游戏.
+                        //    //if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                        //    //{
+                        //    //    SSUIRoot.GetInstance().m_GameUIManage.RemoveWangLuoGuZhangUI();
+                        //    //}
 
-                            //获取游戏红点点后台屏幕码信息.
-                            HttpSendGetGameScreenId();
-                            //获取微信红点点游戏手柄小程序二维码.
-                            HttpSendGetWeiXinXiaoChengXuUrl();
-                            //获取服务器的时间信息
-                            HttpSendGetServerTimeInfo();
-                        }
-                        else
-                        {
-                            Debug.Log("Unity:"+"Login box failed! code == " + jd["code"]);
-                            //网络故障,请检查网络并重启游戏.
-                            if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                            {
-                                SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
-                            }
-                        }
+                        //    //获取游戏红点点后台屏幕码信息.
+                        //    HttpSendGetGameScreenId();
+                        //    //获取微信红点点游戏手柄小程序二维码.
+                        //    HttpSendGetWeiXinXiaoChengXuUrl();
+                        //    //获取服务器的时间信息
+                        //    HttpSendGetServerTimeInfo();
+                        //}
+                        //else
+                        //{
+                        //    Debug.Log("Unity:"+"Login box failed! code == " + jd["code"]);
+                        //    //网络故障,请检查网络并重启游戏.
+                        //    if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                        //    {
+                        //        SSUIRoot.GetInstance().m_GameUIManage.CreatWangLuoGuZhangUI();
+                        //    }
+                        //}
                         break;
                     }
             }
@@ -463,17 +463,17 @@ public class SSBoxPostNet : MonoBehaviour
             {
                 case PostCmd.GET_GAME_PAY_TIME:
                     {
-                        JsonData jd = JsonMapper.ToObject(getData.text);
-                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                        {
-                            //发送支付倒计时信息成功.
-                            //SSDebug.Log("Send GAME_PAY_TIME to HddServer Success.");
-                        }
-                        else
-                        {
-                            //发送支付倒计时信息失败.
-                            SSDebug.LogWarning("Send GAME_PAY_TIME to HddServer Failed!");
-                        }
+                        //JsonData jd = JsonMapper.ToObject(getData.text);
+                        //if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        //{
+                        //    //发送支付倒计时信息成功.
+                        //    //SSDebug.Log("Send GAME_PAY_TIME to HddServer Success.");
+                        //}
+                        //else
+                        //{
+                        //    //发送支付倒计时信息失败.
+                        //    SSDebug.LogWarning("Send GAME_PAY_TIME to HddServer Failed!");
+                        //}
                         break;
                     }
                 case PostCmd.GET_GAME_CONFIG_FROM_HDD_SERVER:
@@ -505,479 +505,479 @@ public class SSBoxPostNet : MonoBehaviour
                         //totalIncome | string | 同一盒子，该款游戏的总收入，如果没有绑定盒子，则没有该信息
                         //barrage 弹幕信息.
 
-                        JsonData jd = JsonMapper.ToObject(getData.text);
-                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                        {
-                            string jsonDataInfo = jd["data"].ToJson();
-                            JsonData jd_Data = JsonMapper.ToObject(jsonDataInfo);
-                            //SSDebug.LogWarning("data ============ " + jsonDataInfo);
-                            string totalReturnRate = jd_Data["setting"]["totalReturnRate"].ToString(); //总返奖率，单位：%
-                            string superRewardMoney = jd_Data["setting"]["superPrizeBusinessMoney"].ToString(); //超级JP大奖商户支付金额
-                            string mod = jd_Data["setting"]["mod"].ToString(); //运营模式
-                            string barrage = jd_Data["setting"]["barrage"].ToString(); //弹幕信息
-                            //SSDebug.Log("totalReturnRate ============ " + totalReturnRate);
-                            //SSDebug.Log("superRewardMoney ============ " + superRewardMoney);
-                            //SSDebug.Log("mod ============ " + mod);
+                        //JsonData jd = JsonMapper.ToObject(getData.text);
+                        //if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        //{
+                        //    string jsonDataInfo = jd["data"].ToJson();
+                        //    JsonData jd_Data = JsonMapper.ToObject(jsonDataInfo);
+                        //    //SSDebug.LogWarning("data ============ " + jsonDataInfo);
+                        //    string totalReturnRate = jd_Data["setting"]["totalReturnRate"].ToString(); //总返奖率，单位：%
+                        //    string superRewardMoney = jd_Data["setting"]["superPrizeBusinessMoney"].ToString(); //超级JP大奖商户支付金额
+                        //    string mod = jd_Data["setting"]["mod"].ToString(); //运营模式
+                        //    string barrage = jd_Data["setting"]["barrage"].ToString(); //弹幕信息
+                        //    //SSDebug.Log("totalReturnRate ============ " + totalReturnRate);
+                        //    //SSDebug.Log("superRewardMoney ============ " + superRewardMoney);
+                        //    //SSDebug.Log("mod ============ " + mod);
 
-                            string payMoney = jd_Data["payItem"]["money"].ToString();
-                            //SSDebug.Log("payItems.money ============ " + payMoney);
+                        //    string payMoney = jd_Data["payItem"]["money"].ToString();
+                        //    //SSDebug.Log("payItems.money ============ " + payMoney);
 
-                            int startTime = 0;
-                            int endTime = 7;
-                            if (XKGlobalData.GetInstance() != null)
-                            {
-                                if (jd_Data["setting"].Keys.Contains("startTime") == true)
-                                {
-                                    startTime = Convert.ToInt32(jd_Data["setting"]["startTime"].ToString());
-                                }
-                                if (jd_Data["setting"].Keys.Contains("endTime") == true)
-                                {
-                                    endTime = Convert.ToInt32(jd_Data["setting"]["endTime"].ToString());
-                                }
-                                //更新代金券有效期限数据.
-                                XKGlobalData.GetInstance().SetHddDaiJinQuanYouXiaoQiDt(startTime, endTime);
+                        //    int startTime = 0;
+                        //    int endTime = 7;
+                        //    if (XKGlobalData.GetInstance() != null)
+                        //    {
+                        //        if (jd_Data["setting"].Keys.Contains("startTime") == true)
+                        //        {
+                        //            startTime = Convert.ToInt32(jd_Data["setting"]["startTime"].ToString());
+                        //        }
+                        //        if (jd_Data["setting"].Keys.Contains("endTime") == true)
+                        //        {
+                        //            endTime = Convert.ToInt32(jd_Data["setting"]["endTime"].ToString());
+                        //        }
+                        //        //更新代金券有效期限数据.
+                        //        XKGlobalData.GetInstance().SetHddDaiJinQuanYouXiaoQiDt(startTime, endTime);
 
-                                int freeTimeInterval = 20;
-                                if (jd_Data["setting"].Keys.Contains("freeTimeInterval") == true)
-                                {
-                                    freeTimeInterval = Convert.ToInt32(jd_Data["setting"]["freeTimeInterval"].ToString());
-                                }
-                                //跟新游戏下次免费间隔时间数据.
-                                XKGlobalData.GetInstance().SetTimeMianFeiNum(freeTimeInterval);
-                            }
+                        //        int freeTimeInterval = 20;
+                        //        if (jd_Data["setting"].Keys.Contains("freeTimeInterval") == true)
+                        //        {
+                        //            freeTimeInterval = Convert.ToInt32(jd_Data["setting"]["freeTimeInterval"].ToString());
+                        //        }
+                        //        //跟新游戏下次免费间隔时间数据.
+                        //        XKGlobalData.GetInstance().SetTimeMianFeiNum(freeTimeInterval);
+                        //    }
 
-                            //"money":20,"returnRate":30,"burstRate":0,"isLimit":0,"prizePool":"0"
-                            string jsonData_prizeDetailVoListInfo = jd["data"]["prizeList"].ToJson();
-                            JsonData jd_Data_prizeDetailVoList = JsonMapper.ToObject(jsonData_prizeDetailVoListInfo);
-                            SSServerConfigData gameConfigDt = new SSServerConfigData();
-                            int prizeCount = jd_Data_prizeDetailVoList.Count;
-                            //SSDebug.Log("prizeCount ============================== " + prizeCount);
-                            string jpBossMoney = "";
-                            string jpBossReturnRate = "";
-                            string jpBossBurstRate = "";
-                            string jpBossIsLimit = "";
-                            string jpBossPrizePool = "";
+                        //    //"money":20,"returnRate":30,"burstRate":0,"isLimit":0,"prizePool":"0"
+                        //    string jsonData_prizeDetailVoListInfo = jd["data"]["prizeList"].ToJson();
+                        //    JsonData jd_Data_prizeDetailVoList = JsonMapper.ToObject(jsonData_prizeDetailVoListInfo);
+                        //    SSServerConfigData gameConfigDt = new SSServerConfigData();
+                        //    int prizeCount = jd_Data_prizeDetailVoList.Count;
+                        //    //SSDebug.Log("prizeCount ============================== " + prizeCount);
+                        //    string jpBossMoney = "";
+                        //    string jpBossReturnRate = "";
+                        //    string jpBossBurstRate = "";
+                        //    string jpBossIsLimit = "";
+                        //    string jpBossPrizePool = "";
 
-                            string zhanCheMoney_01 = "";
-                            string zhanCheReturnRate_01 = "";
-                            string zhanCheBurstRate_01 = "";
-                            string zhanCheIsLimit_01 = "";
-                            string zhanChePrizePool_01 = "";
+                        //    string zhanCheMoney_01 = "";
+                        //    string zhanCheReturnRate_01 = "";
+                        //    string zhanCheBurstRate_01 = "";
+                        //    string zhanCheIsLimit_01 = "";
+                        //    string zhanChePrizePool_01 = "";
 
-                            string zhanCheMoney_02 = "";
-                            string zhanCheReturnRate_02 = "";
-                            string zhanCheBurstRate_02 = "";
-                            string zhanCheIsLimit_02 = "";
-                            string zhanChePrizePool_02 = "";
+                        //    string zhanCheMoney_02 = "";
+                        //    string zhanCheReturnRate_02 = "";
+                        //    string zhanCheBurstRate_02 = "";
+                        //    string zhanCheIsLimit_02 = "";
+                        //    string zhanChePrizePool_02 = "";
 
-                            string daoJuMoney = "";
-                            string daoJuReturnRate = "";
-                            string daoJuBurstRate = "";
-                            string daoJuIsLimit = "";
-                            string daoJuPrizePool = "";
+                        //    string daoJuMoney = "";
+                        //    string daoJuReturnRate = "";
+                        //    string daoJuBurstRate = "";
+                        //    string daoJuIsLimit = "";
+                        //    string daoJuPrizePool = "";
 
-                            string prizeLevel = ""; //奖品等级.
-                            bool isFindJPBossPrizeInfo = false;
-                            bool isFindZhanChe01PrizeInfo = false;
-                            bool isFindZhanChe02PrizeInfo = false;
-                            bool isFindSuiJiDaoJuPrizeInfo = false;
-                            for (int i = 0; i < prizeCount; i++)
-                            {
-                                prizeLevel = jd_Data_prizeDetailVoList[i]["level"].ToString(); //奖品等级 1:一等奖，2:二等奖，依次类推
-                                switch (prizeLevel)
-                                {
-                                    case "1":
-                                        {
-                                            if (XKGlobalData.GetInstance() != null)
-                                            {
-                                                //设置红点点奖品ID信息.
-                                                XKGlobalData.GetInstance().SetHddJiangPinId(0, jd_Data_prizeDetailVoList[i]["id"].ToString());
-                                                XKGlobalData.GetInstance().SetHddJiangChiIsLimit(0, jd_Data_prizeDetailVoList[i]["isLimitless"].ToString());
-                                            }
-                                            isFindJPBossPrizeInfo = true;
-                                            jpBossMoney = jd_Data_prizeDetailVoList[i]["prizeMoney"].ToString(); //代金券金额
-                                            jpBossReturnRate = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
-                                            jpBossBurstRate = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
-                                            jpBossIsLimit = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
-                                            jpBossPrizePool = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
-                                            //SSDebug.Log("jpBossMoney ============ " + jpBossMoney);
-                                            //SSDebug.Log("jpBossReturnRate ============ " + jpBossReturnRate);
-                                            //SSDebug.Log("jpBossBurstRate ============ " + jpBossBurstRate);
-                                            //SSDebug.Log("jpBossIsLimit ============ " + jpBossIsLimit);
-                                            //SSDebug.Log("jpBossPrizePool ============ " + jpBossPrizePool);
-                                            break;
-                                        }
-                                    case "2":
-                                        {
-                                            if (XKGlobalData.GetInstance() != null)
-                                            {
-                                                //设置红点点奖品ID信息.
-                                                XKGlobalData.GetInstance().SetHddJiangPinId(1, jd_Data_prizeDetailVoList[i]["id"].ToString());
-                                                XKGlobalData.GetInstance().SetHddJiangChiIsLimit(1, jd_Data_prizeDetailVoList[i]["isLimitless"].ToString());
-                                            }
-                                            isFindZhanChe01PrizeInfo = true;
-                                            zhanCheMoney_01 = jd_Data_prizeDetailVoList[i]["prizeMoney"].ToString(); //代金券金额
-                                            zhanCheReturnRate_01 = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
-                                            zhanCheBurstRate_01 = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
-                                            zhanCheIsLimit_01 = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
-                                            zhanChePrizePool_01 = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
-                                            //SSDebug.Log("zhanCheMoney_01 ============ " + zhanCheMoney_01);
-                                            //SSDebug.Log("zhanCheReturnRate_01 ============ " + zhanCheReturnRate_01);
-                                            //SSDebug.Log("zhanCheBurstRate_01 ============ " + zhanCheBurstRate_01);
-                                            //SSDebug.Log("zhanCheIsLimit_01 ============ " + zhanCheIsLimit_01);
-                                            //SSDebug.Log("zhanChePrizePool_01 ============ " + zhanChePrizePool_01);
-                                            break;
-                                        }
-                                    case "3":
-                                        {
-                                            if (XKGlobalData.GetInstance() != null)
-                                            {
-                                                //设置红点点奖品ID信息.
-                                                XKGlobalData.GetInstance().SetHddJiangPinId(2, jd_Data_prizeDetailVoList[i]["id"].ToString());
-                                                XKGlobalData.GetInstance().SetHddJiangChiIsLimit(2, jd_Data_prizeDetailVoList[i]["isLimitless"].ToString());
-                                            }
-                                            isFindZhanChe02PrizeInfo = true;
-                                            zhanCheMoney_02 = jd_Data_prizeDetailVoList[i]["prizeMoney"].ToString(); //代金券金额
-                                            zhanCheReturnRate_02 = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
-                                            zhanCheBurstRate_02 = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
-                                            zhanCheIsLimit_02 = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
-                                            zhanChePrizePool_02 = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
-                                            //SSDebug.Log("zhanCheMoney_02 ============ " + zhanCheMoney_02);
-                                            //SSDebug.Log("zhanCheReturnRate_02 ============ " + zhanCheReturnRate_02);
-                                            //SSDebug.Log("zhanCheBurstRate_02 ============ " + zhanCheBurstRate_02);
-                                            //SSDebug.Log("zhanCheIsLimit_02 ============ " + zhanCheIsLimit_02);
-                                            //SSDebug.Log("zhanChePrizePool_02 ============ " + zhanChePrizePool_02);
-                                            break;
-                                        }
-                                    case "4":
-                                        {
-                                            if (XKGlobalData.GetInstance() != null)
-                                            {
-                                                //设置红点点奖品ID信息.
-                                                XKGlobalData.GetInstance().SetHddJiangPinId(3, jd_Data_prizeDetailVoList[i]["id"].ToString());
-                                                XKGlobalData.GetInstance().SetHddJiangChiIsLimit(3, jd_Data_prizeDetailVoList[i]["isLimitless"].ToString());
-                                            }
-                                            isFindSuiJiDaoJuPrizeInfo = true;
-                                            daoJuMoney = jd_Data_prizeDetailVoList[i]["prizeMoney"].ToString(); //代金券金额
-                                            daoJuReturnRate = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
+                        //    string prizeLevel = ""; //奖品等级.
+                        //    bool isFindJPBossPrizeInfo = false;
+                        //    bool isFindZhanChe01PrizeInfo = false;
+                        //    bool isFindZhanChe02PrizeInfo = false;
+                        //    bool isFindSuiJiDaoJuPrizeInfo = false;
+                        //    for (int i = 0; i < prizeCount; i++)
+                        //    {
+                        //        prizeLevel = jd_Data_prizeDetailVoList[i]["level"].ToString(); //奖品等级 1:一等奖，2:二等奖，依次类推
+                        //        switch (prizeLevel)
+                        //        {
+                        //            case "1":
+                        //                {
+                        //                    if (XKGlobalData.GetInstance() != null)
+                        //                    {
+                        //                        //设置红点点奖品ID信息.
+                        //                        XKGlobalData.GetInstance().SetHddJiangPinId(0, jd_Data_prizeDetailVoList[i]["id"].ToString());
+                        //                        XKGlobalData.GetInstance().SetHddJiangChiIsLimit(0, jd_Data_prizeDetailVoList[i]["isLimitless"].ToString());
+                        //                    }
+                        //                    isFindJPBossPrizeInfo = true;
+                        //                    jpBossMoney = jd_Data_prizeDetailVoList[i]["prizeMoney"].ToString(); //代金券金额
+                        //                    jpBossReturnRate = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
+                        //                    jpBossBurstRate = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
+                        //                    jpBossIsLimit = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
+                        //                    jpBossPrizePool = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
+                        //                    //SSDebug.Log("jpBossMoney ============ " + jpBossMoney);
+                        //                    //SSDebug.Log("jpBossReturnRate ============ " + jpBossReturnRate);
+                        //                    //SSDebug.Log("jpBossBurstRate ============ " + jpBossBurstRate);
+                        //                    //SSDebug.Log("jpBossIsLimit ============ " + jpBossIsLimit);
+                        //                    //SSDebug.Log("jpBossPrizePool ============ " + jpBossPrizePool);
+                        //                    break;
+                        //                }
+                        //            case "2":
+                        //                {
+                        //                    if (XKGlobalData.GetInstance() != null)
+                        //                    {
+                        //                        //设置红点点奖品ID信息.
+                        //                        XKGlobalData.GetInstance().SetHddJiangPinId(1, jd_Data_prizeDetailVoList[i]["id"].ToString());
+                        //                        XKGlobalData.GetInstance().SetHddJiangChiIsLimit(1, jd_Data_prizeDetailVoList[i]["isLimitless"].ToString());
+                        //                    }
+                        //                    isFindZhanChe01PrizeInfo = true;
+                        //                    zhanCheMoney_01 = jd_Data_prizeDetailVoList[i]["prizeMoney"].ToString(); //代金券金额
+                        //                    zhanCheReturnRate_01 = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
+                        //                    zhanCheBurstRate_01 = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
+                        //                    zhanCheIsLimit_01 = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
+                        //                    zhanChePrizePool_01 = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
+                        //                    //SSDebug.Log("zhanCheMoney_01 ============ " + zhanCheMoney_01);
+                        //                    //SSDebug.Log("zhanCheReturnRate_01 ============ " + zhanCheReturnRate_01);
+                        //                    //SSDebug.Log("zhanCheBurstRate_01 ============ " + zhanCheBurstRate_01);
+                        //                    //SSDebug.Log("zhanCheIsLimit_01 ============ " + zhanCheIsLimit_01);
+                        //                    //SSDebug.Log("zhanChePrizePool_01 ============ " + zhanChePrizePool_01);
+                        //                    break;
+                        //                }
+                        //            case "3":
+                        //                {
+                        //                    if (XKGlobalData.GetInstance() != null)
+                        //                    {
+                        //                        //设置红点点奖品ID信息.
+                        //                        XKGlobalData.GetInstance().SetHddJiangPinId(2, jd_Data_prizeDetailVoList[i]["id"].ToString());
+                        //                        XKGlobalData.GetInstance().SetHddJiangChiIsLimit(2, jd_Data_prizeDetailVoList[i]["isLimitless"].ToString());
+                        //                    }
+                        //                    isFindZhanChe02PrizeInfo = true;
+                        //                    zhanCheMoney_02 = jd_Data_prizeDetailVoList[i]["prizeMoney"].ToString(); //代金券金额
+                        //                    zhanCheReturnRate_02 = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
+                        //                    zhanCheBurstRate_02 = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
+                        //                    zhanCheIsLimit_02 = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
+                        //                    zhanChePrizePool_02 = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
+                        //                    //SSDebug.Log("zhanCheMoney_02 ============ " + zhanCheMoney_02);
+                        //                    //SSDebug.Log("zhanCheReturnRate_02 ============ " + zhanCheReturnRate_02);
+                        //                    //SSDebug.Log("zhanCheBurstRate_02 ============ " + zhanCheBurstRate_02);
+                        //                    //SSDebug.Log("zhanCheIsLimit_02 ============ " + zhanCheIsLimit_02);
+                        //                    //SSDebug.Log("zhanChePrizePool_02 ============ " + zhanChePrizePool_02);
+                        //                    break;
+                        //                }
+                        //            case "4":
+                        //                {
+                        //                    if (XKGlobalData.GetInstance() != null)
+                        //                    {
+                        //                        //设置红点点奖品ID信息.
+                        //                        XKGlobalData.GetInstance().SetHddJiangPinId(3, jd_Data_prizeDetailVoList[i]["id"].ToString());
+                        //                        XKGlobalData.GetInstance().SetHddJiangChiIsLimit(3, jd_Data_prizeDetailVoList[i]["isLimitless"].ToString());
+                        //                    }
+                        //                    isFindSuiJiDaoJuPrizeInfo = true;
+                        //                    daoJuMoney = jd_Data_prizeDetailVoList[i]["prizeMoney"].ToString(); //代金券金额
+                        //                    daoJuReturnRate = jd_Data_prizeDetailVoList[i]["returnRate"].ToString(); //返奖率，单位：%
 
-                                            if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
-                                            {
-                                                //海底捞菜品券版本可以掉落随机道具.
-                                                daoJuBurstRate = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
-                                            }
-                                            else
-                                            {
-                                                //其它版本游戏暂时不允许掉落随机道具.
-                                                daoJuBurstRate = "0";
-                                            }
-                                            daoJuIsLimit = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
-                                            daoJuPrizePool = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
-                                            //SSDebug.Log("daoJuMoney ============ " + daoJuMoney);
-                                            //SSDebug.Log("daoJuReturnRate ============ " + daoJuReturnRate);
-                                            //SSDebug.Log("daoJuBurstRate ============ " + daoJuBurstRate);
-                                            //SSDebug.Log("daoJuIsLimit ============ " + daoJuIsLimit);
-                                            //SSDebug.Log("daoJuPrizePool ============ " + daoJuPrizePool);
-                                            break;
-                                        }
-                                }
-                            }
+                        //                    if (SSGameLogoData.m_GameDaiJinQuanMode == SSGameLogoData.GameDaiJinQuanMode.HDL_CaiPinQuan)
+                        //                    {
+                        //                        //海底捞菜品券版本可以掉落随机道具.
+                        //                        daoJuBurstRate = jd_Data_prizeDetailVoList[i]["burstRate"].ToString(); //爆奖率，单位：%
+                        //                    }
+                        //                    else
+                        //                    {
+                        //                        //其它版本游戏暂时不允许掉落随机道具.
+                        //                        daoJuBurstRate = "0";
+                        //                    }
+                        //                    daoJuIsLimit = jd_Data_prizeDetailVoList[i]["isLimitless"].ToString(); //是否无限
+                        //                    daoJuPrizePool = jd_Data_prizeDetailVoList[i]["prizeMoneyPool"].ToString(); //代金券奖池
+                        //                    //SSDebug.Log("daoJuMoney ============ " + daoJuMoney);
+                        //                    //SSDebug.Log("daoJuReturnRate ============ " + daoJuReturnRate);
+                        //                    //SSDebug.Log("daoJuBurstRate ============ " + daoJuBurstRate);
+                        //                    //SSDebug.Log("daoJuIsLimit ============ " + daoJuIsLimit);
+                        //                    //SSDebug.Log("daoJuPrizePool ============ " + daoJuPrizePool);
+                        //                    break;
+                        //                }
+                        //        }
+                        //    }
 
-                            if (isFindJPBossPrizeInfo == true)
-                            {
-                                gameConfigDt.JPBossDaiJinQuan = Convert.ToInt32(jpBossMoney); //jpBoss代金券面额
-                                gameConfigDt.JPBossChuPiaoLv = Convert.ToInt32(jpBossReturnRate); //jpBoss返奖率
-                                gameConfigDt.JPBossBaoJiangLv = Convert.ToInt32(jpBossBurstRate); //jpBoss爆奖率
-                                gameConfigDt.IsWuQiongDaJiangChiJPBossDaiJinQuan = jpBossIsLimit == "0" ? false : true; //jpBoss奖池是否无限
-                                gameConfigDt.JPBossDeCai = MathConverter.StringToFloat(jpBossPrizePool); //jpBoss奖池
-                            }
+                        //    if (isFindJPBossPrizeInfo == true)
+                        //    {
+                        //        gameConfigDt.JPBossDaiJinQuan = Convert.ToInt32(jpBossMoney); //jpBoss代金券面额
+                        //        gameConfigDt.JPBossChuPiaoLv = Convert.ToInt32(jpBossReturnRate); //jpBoss返奖率
+                        //        gameConfigDt.JPBossBaoJiangLv = Convert.ToInt32(jpBossBurstRate); //jpBoss爆奖率
+                        //        gameConfigDt.IsWuQiongDaJiangChiJPBossDaiJinQuan = jpBossIsLimit == "0" ? false : true; //jpBoss奖池是否无限
+                        //        gameConfigDt.JPBossDeCai = MathConverter.StringToFloat(jpBossPrizePool); //jpBoss奖池
+                        //    }
 
-                            if (isFindZhanChe01PrizeInfo == true)
-                            {
-                                gameConfigDt.ZhanCheDaiJinQuan_01 = Convert.ToInt32(zhanCheMoney_01); //战车01代金券面额
-                                gameConfigDt.ZhanCheChuPiaoLv_01 = Convert.ToInt32(zhanCheReturnRate_01); //战车01返奖率
-                                gameConfigDt.ZhanCheBaoJiangLv_01 = Convert.ToInt32(zhanCheBurstRate_01); //战车01爆奖率
-                                gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_01 = zhanCheIsLimit_01 == "0" ? false : true; //战车01奖池是否无限
-                                gameConfigDt.ZhanCheDeCai_01 = MathConverter.StringToFloat(zhanChePrizePool_01); //战车01奖池
-                            }
+                        //    if (isFindZhanChe01PrizeInfo == true)
+                        //    {
+                        //        gameConfigDt.ZhanCheDaiJinQuan_01 = Convert.ToInt32(zhanCheMoney_01); //战车01代金券面额
+                        //        gameConfigDt.ZhanCheChuPiaoLv_01 = Convert.ToInt32(zhanCheReturnRate_01); //战车01返奖率
+                        //        gameConfigDt.ZhanCheBaoJiangLv_01 = Convert.ToInt32(zhanCheBurstRate_01); //战车01爆奖率
+                        //        gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_01 = zhanCheIsLimit_01 == "0" ? false : true; //战车01奖池是否无限
+                        //        gameConfigDt.ZhanCheDeCai_01 = MathConverter.StringToFloat(zhanChePrizePool_01); //战车01奖池
+                        //    }
 
-                            if (isFindZhanChe02PrizeInfo == true)
-                            {
-                                gameConfigDt.ZhanCheDaiJinQuan_02 = Convert.ToInt32(zhanCheMoney_02); //战车02代金券面额
-                                gameConfigDt.ZhanCheChuPiaoLv_02 = Convert.ToInt32(zhanCheReturnRate_02); //战车02返奖率
-                                gameConfigDt.ZhanCheBaoJiangLv_02 = Convert.ToInt32(zhanCheBurstRate_02); //战车02爆奖率
-                                gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_02 = zhanCheIsLimit_02 == "0" ? false : true; //战车02奖池是否无限
-                                gameConfigDt.ZhanCheDeCai_02 = MathConverter.StringToFloat(zhanChePrizePool_02); //战车02奖池
-                            }
+                        //    if (isFindZhanChe02PrizeInfo == true)
+                        //    {
+                        //        gameConfigDt.ZhanCheDaiJinQuan_02 = Convert.ToInt32(zhanCheMoney_02); //战车02代金券面额
+                        //        gameConfigDt.ZhanCheChuPiaoLv_02 = Convert.ToInt32(zhanCheReturnRate_02); //战车02返奖率
+                        //        gameConfigDt.ZhanCheBaoJiangLv_02 = Convert.ToInt32(zhanCheBurstRate_02); //战车02爆奖率
+                        //        gameConfigDt.IsWuQiongDaJiangChiZhanCheDaiJinQuan_02 = zhanCheIsLimit_02 == "0" ? false : true; //战车02奖池是否无限
+                        //        gameConfigDt.ZhanCheDeCai_02 = MathConverter.StringToFloat(zhanChePrizePool_02); //战车02奖池
+                        //    }
 
-                            if (isFindSuiJiDaoJuPrizeInfo == true)
-                            {
-                                gameConfigDt.SuiJiDaoJuDaiJinQuan = Convert.ToInt32(daoJuMoney); //道具代金券面额
-                                gameConfigDt.SuiJiDaoJuChuPiaoLv = Convert.ToInt32(daoJuReturnRate); //道具返奖率
-                                gameConfigDt.SuiJiDaoJuBaoJiangLv = Convert.ToInt32(daoJuBurstRate); //道具爆奖率
-                                gameConfigDt.IsWuQiongDaJiangChiSuiJiDaoJuDaiJinQuan = daoJuIsLimit == "0" ? false : true; //道具奖池是否无限
-                                gameConfigDt.SuiJiDaoJuDeCai = MathConverter.StringToFloat(daoJuPrizePool); //道具奖池
-                            }
+                        //    if (isFindSuiJiDaoJuPrizeInfo == true)
+                        //    {
+                        //        gameConfigDt.SuiJiDaoJuDaiJinQuan = Convert.ToInt32(daoJuMoney); //道具代金券面额
+                        //        gameConfigDt.SuiJiDaoJuChuPiaoLv = Convert.ToInt32(daoJuReturnRate); //道具返奖率
+                        //        gameConfigDt.SuiJiDaoJuBaoJiangLv = Convert.ToInt32(daoJuBurstRate); //道具爆奖率
+                        //        gameConfigDt.IsWuQiongDaJiangChiSuiJiDaoJuDaiJinQuan = daoJuIsLimit == "0" ? false : true; //道具奖池是否无限
+                        //        gameConfigDt.SuiJiDaoJuDeCai = MathConverter.StringToFloat(daoJuPrizePool); //道具奖池
+                        //    }
 
-                            gameConfigDt.GameCoinToMoney = Convert.ToInt32(payMoney); //付费金额信息
-                            gameConfigDt.CaiChiFanJiangLv = Convert.ToInt32(totalReturnRate) / 100f; //总返奖率，单位：%
+                        //    gameConfigDt.GameCoinToMoney = Convert.ToInt32(payMoney); //付费金额信息
+                        //    gameConfigDt.CaiChiFanJiangLv = Convert.ToInt32(totalReturnRate) / 100f; //总返奖率，单位：%
 
-                            string danMuInfo = barrage;
-                            string[] danMuInfoArray = danMuInfo.Split('#');
-                            if (danMuInfoArray.Length > 0)
-                            {
-                                //SSDebug.Log("barrage ============ " + danMuInfoArray[0]);
-                                gameConfigDt.GameDanMuInfo = danMuInfoArray[0]; //弹幕信息
-                            }
-                            //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
-                            //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 2 : 0; //运营模式(0 可以免费试玩2次， 其它为不允许免费试玩)
+                        //    string danMuInfo = barrage;
+                        //    string[] danMuInfoArray = danMuInfo.Split('#');
+                        //    if (danMuInfoArray.Length > 0)
+                        //    {
+                        //        //SSDebug.Log("barrage ============ " + danMuInfoArray[0]);
+                        //        gameConfigDt.GameDanMuInfo = danMuInfoArray[0]; //弹幕信息
+                        //    }
+                        //    //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 1 : 0; //运营模式(0 可以免费试玩一次， 其它为不允许免费试玩)
+                        //    //gameConfigDt.MianFeiShiWanCount = mod == "0" ? 2 : 0; //运营模式(0 可以免费试玩2次， 其它为不允许免费试玩)
 
-                            int mianFeiFuHuoCiShu = 1; //免费复活次数(默认数值).
-                            if (jd_Data["setting"].Keys.Contains("firstFreeResurrection") == true)
-                            {
-                                mianFeiFuHuoCiShu = Convert.ToInt32(jd_Data["setting"]["firstFreeResurrection"].ToString());
-                            }
+                        //    int mianFeiFuHuoCiShu = 1; //免费复活次数(默认数值).
+                        //    if (jd_Data["setting"].Keys.Contains("firstFreeResurrection") == true)
+                        //    {
+                        //        mianFeiFuHuoCiShu = Convert.ToInt32(jd_Data["setting"]["firstFreeResurrection"].ToString());
+                        //    }
 
-                            int mianFeiShiWanCount = 0; //免费试玩次数.
-                            if (mod == "0")
-                            {
-                                //首次免费.
-                                mianFeiShiWanCount = 1 + mianFeiFuHuoCiShu; //首次免费加免费复活次数等于免费试玩次数.
-                            }
-                            else
-                            {
-                                //首次付费.
-                                mianFeiShiWanCount = 0;
-                            }
-                            gameConfigDt.MianFeiShiWanCount = mianFeiShiWanCount;
-                            gameConfigDt.JPBossDaiJinQuanShangHuZhiFu = Convert.ToInt32(superRewardMoney);
-                            gameConfigDt.UpdataAllServerConfigData();
+                        //    int mianFeiShiWanCount = 0; //免费试玩次数.
+                        //    if (mod == "0")
+                        //    {
+                        //        //首次免费.
+                        //        mianFeiShiWanCount = 1 + mianFeiFuHuoCiShu; //首次免费加免费复活次数等于免费试玩次数.
+                        //    }
+                        //    else
+                        //    {
+                        //        //首次付费.
+                        //        mianFeiShiWanCount = 0;
+                        //    }
+                        //    gameConfigDt.MianFeiShiWanCount = mianFeiShiWanCount;
+                        //    gameConfigDt.JPBossDaiJinQuanShangHuZhiFu = Convert.ToInt32(superRewardMoney);
+                        //    gameConfigDt.UpdataAllServerConfigData();
 
-                            //商户信息，在字符串中已#分割.
-                            //1 -> 自定义弹幕
-                            //2 -> 商户代金券弹幕1
-                            //3 -> 商户代金券弹幕2
-                            //4 -> 商户代金券弹幕3
-                            //5 -> 商户代金券弹幕4
-                            //6 -> 战车代金券商户名称1
-                            //7 -> 战车代金券商户名称2
-                            //8 -> 战车代金券商户名称3
-                            //9 -> 战车代金券商户名称4
-                            //10 -> JPBoss代金券商户名称1
-                            //11 -> JPBoss代金券商户名称2
-                            //12 -> JPBoss代金券商户名称3
-                            //13 -> JPBoss代金券商户名称4
-                            //14 -> 战车代金券使用详情1
-                            //15 -> 战车代金券使用详情2
-                            //16 -> 战车代金券使用详情3
-                            //17 -> 战车代金券使用详情4
-                            //18 -> JPBoss代金券使用详情1
-                            //19 -> JPBoss代金券使用详情2
-                            //20 -> JPBoss代金券使用详情3
-                            //21 -> JPBoss代金券使用详情4
-                            //22 -> 战车代金券名称1
-                            //23 -> 战车代金券名称2
-                            //24 -> 战车代金券名称3
-                            //25 -> 战车代金券名称4
-                            //26 -> JPBoss代金券名称1
-                            //27 -> JPBoss代金券名称2
-                            //28 -> JPBoss代金券名称3
-                            //29 -> JPBoss代金券名称4
-                            //30 -> 随机道具奖品4商户名称
-                            //31 -> 随机道具奖品4代金券名称
-                            //32 -> 随机道具奖品4代金券使用详情
-                            if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
-                            {
-                                string shangHuInfo = barrage;
-                                string[] shangHuInfoArray = shangHuInfo.Split('#');
-                                SSShangHuInfo shangHuInfoDt = XkGameCtrl.GetInstance().m_SSShangHuInfo;
-                                if (shangHuInfoArray.Length >= 5)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 1; i < 5; i++)
-                                    {
-                                        infoArray[i - 1] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏商户弹幕数据信息.
-                                    shangHuInfoDt.UpdateShangHuDanMuInfo(infoArray);
-                                }
+                        //    //商户信息，在字符串中已#分割.
+                        //    //1 -> 自定义弹幕
+                        //    //2 -> 商户代金券弹幕1
+                        //    //3 -> 商户代金券弹幕2
+                        //    //4 -> 商户代金券弹幕3
+                        //    //5 -> 商户代金券弹幕4
+                        //    //6 -> 战车代金券商户名称1
+                        //    //7 -> 战车代金券商户名称2
+                        //    //8 -> 战车代金券商户名称3
+                        //    //9 -> 战车代金券商户名称4
+                        //    //10 -> JPBoss代金券商户名称1
+                        //    //11 -> JPBoss代金券商户名称2
+                        //    //12 -> JPBoss代金券商户名称3
+                        //    //13 -> JPBoss代金券商户名称4
+                        //    //14 -> 战车代金券使用详情1
+                        //    //15 -> 战车代金券使用详情2
+                        //    //16 -> 战车代金券使用详情3
+                        //    //17 -> 战车代金券使用详情4
+                        //    //18 -> JPBoss代金券使用详情1
+                        //    //19 -> JPBoss代金券使用详情2
+                        //    //20 -> JPBoss代金券使用详情3
+                        //    //21 -> JPBoss代金券使用详情4
+                        //    //22 -> 战车代金券名称1
+                        //    //23 -> 战车代金券名称2
+                        //    //24 -> 战车代金券名称3
+                        //    //25 -> 战车代金券名称4
+                        //    //26 -> JPBoss代金券名称1
+                        //    //27 -> JPBoss代金券名称2
+                        //    //28 -> JPBoss代金券名称3
+                        //    //29 -> JPBoss代金券名称4
+                        //    //30 -> 随机道具奖品4商户名称
+                        //    //31 -> 随机道具奖品4代金券名称
+                        //    //32 -> 随机道具奖品4代金券使用详情
+                        //    if (XkGameCtrl.GetInstance().m_SSShangHuInfo != null)
+                        //    {
+                        //        string shangHuInfo = barrage;
+                        //        string[] shangHuInfoArray = shangHuInfo.Split('#');
+                        //        SSShangHuInfo shangHuInfoDt = XkGameCtrl.GetInstance().m_SSShangHuInfo;
+                        //        if (shangHuInfoArray.Length >= 5)
+                        //        {
+                        //            string[] infoArray = new string[4];
+                        //            for (int i = 1; i < 5; i++)
+                        //            {
+                        //                infoArray[i - 1] = shangHuInfoArray[i];
+                        //            }
+                        //            //更新游戏商户弹幕数据信息.
+                        //            shangHuInfoDt.UpdateShangHuDanMuInfo(infoArray);
+                        //        }
 
-                                if (shangHuInfoArray.Length >= 9)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 5; i < 9; i++)
-                                    {
-                                        infoArray[i - 5] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏商户数据信息.
-                                    shangHuInfoDt.UpdateShangHuInfo(infoArray);
-                                }
+                        //        if (shangHuInfoArray.Length >= 9)
+                        //        {
+                        //            string[] infoArray = new string[4];
+                        //            for (int i = 5; i < 9; i++)
+                        //            {
+                        //                infoArray[i - 5] = shangHuInfoArray[i];
+                        //            }
+                        //            //更新游戏商户数据信息.
+                        //            shangHuInfoDt.UpdateShangHuInfo(infoArray);
+                        //        }
 
-                                if (shangHuInfoArray.Length >= 13)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 9; i < 13; i++)
-                                    {
-                                        infoArray[i - 9] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏大奖Boss商户数据信息.
-                                    shangHuInfoDt.UpdateDaJiangBossShangHuInfo(infoArray);
-                                }
+                        //        if (shangHuInfoArray.Length >= 13)
+                        //        {
+                        //            string[] infoArray = new string[4];
+                        //            for (int i = 9; i < 13; i++)
+                        //            {
+                        //                infoArray[i - 9] = shangHuInfoArray[i];
+                        //            }
+                        //            //更新游戏大奖Boss商户数据信息.
+                        //            shangHuInfoDt.UpdateDaJiangBossShangHuInfo(infoArray);
+                        //        }
 
-                                if (shangHuInfoArray.Length >= 17)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 13; i < 17; i++)
-                                    {
-                                        infoArray[i - 13] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏商户战车代金券使用详情数据信息.
-                                    shangHuInfoDt.UpdateShangHuDaiJinQuanXiangQing(infoArray);
-                                }
+                        //        if (shangHuInfoArray.Length >= 17)
+                        //        {
+                        //            string[] infoArray = new string[4];
+                        //            for (int i = 13; i < 17; i++)
+                        //            {
+                        //                infoArray[i - 13] = shangHuInfoArray[i];
+                        //            }
+                        //            //更新游戏商户战车代金券使用详情数据信息.
+                        //            shangHuInfoDt.UpdateShangHuDaiJinQuanXiangQing(infoArray);
+                        //        }
 
-                                if (shangHuInfoArray.Length >= 21)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 17; i < 21; i++)
-                                    {
-                                        infoArray[i - 17] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏大奖Boss代金券使用详情数据信息.
-                                    shangHuInfoDt.UpdateDaJiangBossDaiJinQuanXiangQing(infoArray);
-                                }
+                        //        if (shangHuInfoArray.Length >= 21)
+                        //        {
+                        //            string[] infoArray = new string[4];
+                        //            for (int i = 17; i < 21; i++)
+                        //            {
+                        //                infoArray[i - 17] = shangHuInfoArray[i];
+                        //            }
+                        //            //更新游戏大奖Boss代金券使用详情数据信息.
+                        //            shangHuInfoDt.UpdateDaJiangBossDaiJinQuanXiangQing(infoArray);
+                        //        }
 
-                                if (shangHuInfoArray.Length >= 25)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 21; i < 25; i++)
-                                    {
-                                        infoArray[i - 21] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏战车代金券名称数据信息.
-                                    shangHuInfoDt.UpdateShangHuDaiJinQuanName(infoArray);
-                                }
+                        //        if (shangHuInfoArray.Length >= 25)
+                        //        {
+                        //            string[] infoArray = new string[4];
+                        //            for (int i = 21; i < 25; i++)
+                        //            {
+                        //                infoArray[i - 21] = shangHuInfoArray[i];
+                        //            }
+                        //            //更新游戏战车代金券名称数据信息.
+                        //            shangHuInfoDt.UpdateShangHuDaiJinQuanName(infoArray);
+                        //        }
 
-                                if (shangHuInfoArray.Length >= 29)
-                                {
-                                    string[] infoArray = new string[4];
-                                    for (int i = 25; i < 29; i++)
-                                    {
-                                        infoArray[i - 25] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏JPBoss代金券名称数据信息.
-                                    shangHuInfoDt.UpdateDaJiangBossDaiJinQuanName(infoArray);
-                                }
+                        //        if (shangHuInfoArray.Length >= 29)
+                        //        {
+                        //            string[] infoArray = new string[4];
+                        //            for (int i = 25; i < 29; i++)
+                        //            {
+                        //                infoArray[i - 25] = shangHuInfoArray[i];
+                        //            }
+                        //            //更新游戏JPBoss代金券名称数据信息.
+                        //            shangHuInfoDt.UpdateDaJiangBossDaiJinQuanName(infoArray);
+                        //        }
 
-                                if (shangHuInfoArray.Length >= 32)
-                                {
-                                    string[] infoArray = new string[3];
-                                    for (int i = 29; i < 32; i++)
-                                    {
-                                        infoArray[i - 29] = shangHuInfoArray[i];
-                                    }
-                                    //更新游戏随机道具奖品4代金券数据信息.
-                                    shangHuInfoDt.UpdateSuiJiDaoJuShangHuInfo(infoArray);
-                                }
-                            }
+                        //        if (shangHuInfoArray.Length >= 32)
+                        //        {
+                        //            string[] infoArray = new string[3];
+                        //            for (int i = 29; i < 32; i++)
+                        //            {
+                        //                infoArray[i - 29] = shangHuInfoArray[i];
+                        //            }
+                        //            //更新游戏随机道具奖品4代金券数据信息.
+                        //            shangHuInfoDt.UpdateSuiJiDaoJuShangHuInfo(infoArray);
+                        //        }
+                        //    }
 
-                            if (XKGlobalData.GetInstance() != null)
-                            {
-                                //更新游戏配置数据.
-                                //更新玩家最大血值.
-                                int playerHealthMax = 45000;
-                                if (jd_Data["setting"].Keys.Contains("playerHp") == true)
-                                {
-                                    playerHealthMax = Convert.ToInt32(jd_Data["setting"]["playerHp"].ToString());
-                                }
-                                XKGlobalData.GetInstance().UpdataPlayerHealthMax(playerHealthMax);
+                        //    if (XKGlobalData.GetInstance() != null)
+                        //    {
+                        //        //更新游戏配置数据.
+                        //        //更新玩家最大血值.
+                        //        int playerHealthMax = 45000;
+                        //        if (jd_Data["setting"].Keys.Contains("playerHp") == true)
+                        //        {
+                        //            playerHealthMax = Convert.ToInt32(jd_Data["setting"]["playerHp"].ToString());
+                        //        }
+                        //        XKGlobalData.GetInstance().UpdataPlayerHealthMax(playerHealthMax);
 
-                                //更新玩家评级分数信息.
-                                int pingJi_sss = 200000;
-                                if (jd_Data["setting"].Keys.Contains("sss") == true)
-                                {
-                                    pingJi_sss = Convert.ToInt32(jd_Data["setting"]["sss"].ToString());
-                                }
-                                int pingJi_ss = 120000;
-                                if (jd_Data["setting"].Keys.Contains("ss") == true)
-                                {
-                                    pingJi_ss = Convert.ToInt32(jd_Data["setting"]["ss"].ToString());
-                                }
-                                int pingJi_s = 80000;
-                                if (jd_Data["setting"].Keys.Contains("s") == true)
-                                {
-                                    pingJi_s = Convert.ToInt32(jd_Data["setting"]["s"].ToString());
-                                }
-                                int pingJi_a = 40000;
-                                if (jd_Data["setting"].Keys.Contains("a") == true)
-                                {
-                                    pingJi_a = Convert.ToInt32(jd_Data["setting"]["a"].ToString());
-                                }
-                                int pingJi_b = 20000;
-                                if (jd_Data["setting"].Keys.Contains("b") == true)
-                                {
-                                    pingJi_b = Convert.ToInt32(jd_Data["setting"]["b"].ToString());
-                                }
-                                int pingJi_c = 10000;
-                                if (jd_Data["setting"].Keys.Contains("c") == true)
-                                {
-                                    pingJi_c = Convert.ToInt32(jd_Data["setting"]["c"].ToString());
-                                }
-                                int pingJi_d = 0;
-                                if (jd_Data["setting"].Keys.Contains("d") == true)
-                                {
-                                    pingJi_d = Convert.ToInt32(jd_Data["setting"]["d"].ToString());
-                                }
-                                XKGlobalData.GetInstance().UpdataPingJiFenShu(pingJi_sss, pingJi_ss, pingJi_s, pingJi_a, pingJi_b, pingJi_c, pingJi_d);
+                        //        //更新玩家评级分数信息.
+                        //        int pingJi_sss = 200000;
+                        //        if (jd_Data["setting"].Keys.Contains("sss") == true)
+                        //        {
+                        //            pingJi_sss = Convert.ToInt32(jd_Data["setting"]["sss"].ToString());
+                        //        }
+                        //        int pingJi_ss = 120000;
+                        //        if (jd_Data["setting"].Keys.Contains("ss") == true)
+                        //        {
+                        //            pingJi_ss = Convert.ToInt32(jd_Data["setting"]["ss"].ToString());
+                        //        }
+                        //        int pingJi_s = 80000;
+                        //        if (jd_Data["setting"].Keys.Contains("s") == true)
+                        //        {
+                        //            pingJi_s = Convert.ToInt32(jd_Data["setting"]["s"].ToString());
+                        //        }
+                        //        int pingJi_a = 40000;
+                        //        if (jd_Data["setting"].Keys.Contains("a") == true)
+                        //        {
+                        //            pingJi_a = Convert.ToInt32(jd_Data["setting"]["a"].ToString());
+                        //        }
+                        //        int pingJi_b = 20000;
+                        //        if (jd_Data["setting"].Keys.Contains("b") == true)
+                        //        {
+                        //            pingJi_b = Convert.ToInt32(jd_Data["setting"]["b"].ToString());
+                        //        }
+                        //        int pingJi_c = 10000;
+                        //        if (jd_Data["setting"].Keys.Contains("c") == true)
+                        //        {
+                        //            pingJi_c = Convert.ToInt32(jd_Data["setting"]["c"].ToString());
+                        //        }
+                        //        int pingJi_d = 0;
+                        //        if (jd_Data["setting"].Keys.Contains("d") == true)
+                        //        {
+                        //            pingJi_d = Convert.ToInt32(jd_Data["setting"]["d"].ToString());
+                        //        }
+                        //        XKGlobalData.GetInstance().UpdataPingJiFenShu(pingJi_sss, pingJi_ss, pingJi_s, pingJi_a, pingJi_b, pingJi_c, pingJi_d);
 
-                                //更新玩家再玩一局游戏奖品的概率信息.
-                                int zaiWanYiJuGaiLv = 10;
-                                if (jd_Data["setting"].Keys.Contains("playAgain") == true)
-                                {
-                                    zaiWanYiJuGaiLv = Convert.ToInt32(jd_Data["setting"]["playAgain"].ToString());
-                                }
-                                XKGlobalData.GetInstance().UpdataZaiWanYiJuGaiLv(zaiWanYiJuGaiLv);
+                        //        //更新玩家再玩一局游戏奖品的概率信息.
+                        //        int zaiWanYiJuGaiLv = 10;
+                        //        if (jd_Data["setting"].Keys.Contains("playAgain") == true)
+                        //        {
+                        //            zaiWanYiJuGaiLv = Convert.ToInt32(jd_Data["setting"]["playAgain"].ToString());
+                        //        }
+                        //        XKGlobalData.GetInstance().UpdataZaiWanYiJuGaiLv(zaiWanYiJuGaiLv);
 
-                                //更新游戏血包道具掉落的间隔时间信息.
-                                int xueBaoJianGeTime = 30; //秒.
-                                if (jd_Data["setting"].Keys.Contains("getHpInterval") == true)
-                                {
-                                    xueBaoJianGeTime = Convert.ToInt32(jd_Data["setting"]["getHpInterval"].ToString());
-                                }
-                                XKGlobalData.GetInstance().UpdataXueBaoJianGeTime(xueBaoJianGeTime);
-                            }
-                        }
-                        else
-                        {
-                            SSDebug.LogWarning("GET_GAME_CONFIG_FROM_HDD_SERVER -> get gameConfig info was failed!");
-                        }
+                        //        //更新游戏血包道具掉落的间隔时间信息.
+                        //        int xueBaoJianGeTime = 30; //秒.
+                        //        if (jd_Data["setting"].Keys.Contains("getHpInterval") == true)
+                        //        {
+                        //            xueBaoJianGeTime = Convert.ToInt32(jd_Data["setting"]["getHpInterval"].ToString());
+                        //        }
+                        //        XKGlobalData.GetInstance().UpdataXueBaoJianGeTime(xueBaoJianGeTime);
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    SSDebug.LogWarning("GET_GAME_CONFIG_FROM_HDD_SERVER -> get gameConfig info was failed!");
+                        //}
                         break;
                     }
                 case PostCmd.GET_HDD_GAME_SCREEN_ID:
                     {
                         //红点点线下游戏屏幕码Id.
                         //{"code":0,"message":"成功","data":{"id":10004,"boxId":"89leitingzhanche68q1q6o30765"}}
-                        JsonData jd = JsonMapper.ToObject(getData.text);
-                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                        {
-                            if (m_BoxLoginData != null)
-                            {
-                                m_BoxLoginData.screenId = jd["data"]["id"].ToString();
-                                if (SSUIRoot.GetInstance().m_GameUIManage != null
-                                    && SSUIRoot.GetInstance().m_GameUIManage.IsCreatGameScreenIdUI == false)
-                                {
-                                    //创建游戏红点点屏幕码UI.
-                                    int screenId = Convert.ToInt32(m_BoxLoginData.screenId);
-                                    SSUIRoot.GetInstance().m_GameUIManage.CreatGameScreenIdUI(screenId);
-                                }
+                        //JsonData jd = JsonMapper.ToObject(getData.text);
+                        //if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        //{
+                        //    if (m_BoxLoginData != null)
+                        //    {
+                        //        m_BoxLoginData.screenId = jd["data"]["id"].ToString();
+                        //        if (SSUIRoot.GetInstance().m_GameUIManage != null
+                        //            && SSUIRoot.GetInstance().m_GameUIManage.IsCreatGameScreenIdUI == false)
+                        //        {
+                        //            //创建游戏红点点屏幕码UI.
+                        //            int screenId = Convert.ToInt32(m_BoxLoginData.screenId);
+                        //            SSUIRoot.GetInstance().m_GameUIManage.CreatGameScreenIdUI(screenId);
+                        //        }
 
-                                //获取游戏在红点点服务器的配置信息.
-                                GetGameConfigInfoFromHddServer();
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogWarning("GET_HDD_GAME_SCREEN_ID -> get screenId was failed!");
-                        }
+                        //        //获取游戏在红点点服务器的配置信息.
+                        //        GetGameConfigInfoFromHddServer();
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    Debug.LogWarning("GET_HDD_GAME_SCREEN_ID -> get screenId was failed!");
+                        //}
                         break;
                     }
                 case PostCmd.GET_HDD_PLAYER_PAY_DATA:
@@ -985,58 +985,58 @@ public class SSBoxPostNet : MonoBehaviour
                         //玩家在红点点平台的账户信息.
                         //{"code":-1,"message":"NO ACCOUNT FOR THIS MEMBER"} //没有该账户.
                         //{"code":0,"message":"成功","data":{"account":1,"memberId":93124}} //成功获取账户信息.
-                        JsonData jd = JsonMapper.ToObject(getData.text);
-                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                        {
-                            //如果有账户信息数据,需要将账户信息数据转换为游戏币.
-                            int userId = Convert.ToInt32(jd["data"]["memberId"].ToString());
-                            int money = Convert.ToInt32(jd["data"]["account"].ToString());
-                            //money = 200; //test
-                            ReceivedWXPlayerHddPayData(userId, money);
-                        }
-                        else
-                        {
-                            //没有账户信息.
-                            //发送充值消息给微信手柄.
-                            //if (m_WebSocketSimpet != null)
-                            //{
-                            //    m_WebSocketSimpet.NetSendWeiXinPadShowTopUpPanel(userIdVal);
-                            //}
-                            ReceivedWXPlayerHddPayData(userIdVal, 0);
-                        }
+                        //JsonData jd = JsonMapper.ToObject(getData.text);
+                        //if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        //{
+                        //    //如果有账户信息数据,需要将账户信息数据转换为游戏币.
+                        //    int userId = Convert.ToInt32(jd["data"]["memberId"].ToString());
+                        //    int money = Convert.ToInt32(jd["data"]["account"].ToString());
+                        //    //money = 200; //test
+                        //    ReceivedWXPlayerHddPayData(userId, money);
+                        //}
+                        //else
+                        //{
+                        //    //没有账户信息.
+                        //    //发送充值消息给微信手柄.
+                        //    //if (m_WebSocketSimpet != null)
+                        //    //{
+                        //    //    m_WebSocketSimpet.NetSendWeiXinPadShowTopUpPanel(userIdVal);
+                        //    //}
+                        //    ReceivedWXPlayerHddPayData(userIdVal, 0);
+                        //}
                         break;
                     }
                 case PostCmd.ServerTimeGet:
                     {
                         //GetData: {"code":0,"message":"成功","data":"2018-09-28 12:58:56"}
-                        JsonData jd = JsonMapper.ToObject(getData.text);
-                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                        {
-                            //string timeSystem = DateTime.Now.ToString("yyyy-MM-dd");
-                            //string serverTime = jd["data"].ToString().Substring(0, 10);
-                            DateTime systemTimeDt = DateTime.Now;
-                            DateTime serverTimeDt = Convert.ToDateTime(jd["data"].ToString());
-                            //test
-                            //systemTimeDt = Convert.ToDateTime("2018-10-01 15:58:56");
-                            //serverTimeDt = Convert.ToDateTime("2018-09-30 12:58:56");
-                            //test
-                            TimeSpan sp = systemTimeDt.Subtract(serverTimeDt);
-                            int daysOffset = sp.Days;
-                            //if (pcvr.GetInstance() != null)
-                            //{
-                            //    pcvr.GetInstance().AddDebugMsg("Unity: daysOffset == " + Mathf.Abs(daysOffset));
-                            //    pcvr.GetInstance().AddDebugMsg("Unity: serverTime == " + serverTime + ", systemTime == " + timeSystem);
-                            //}
+                        //JsonData jd = JsonMapper.ToObject(getData.text);
+                        //if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        //{
+                        //    //string timeSystem = DateTime.Now.ToString("yyyy-MM-dd");
+                        //    //string serverTime = jd["data"].ToString().Substring(0, 10);
+                        //    DateTime systemTimeDt = DateTime.Now;
+                        //    DateTime serverTimeDt = Convert.ToDateTime(jd["data"].ToString());
+                        //    //test
+                        //    //systemTimeDt = Convert.ToDateTime("2018-10-01 15:58:56");
+                        //    //serverTimeDt = Convert.ToDateTime("2018-09-30 12:58:56");
+                        //    //test
+                        //    TimeSpan sp = systemTimeDt.Subtract(serverTimeDt);
+                        //    int daysOffset = sp.Days;
+                        //    //if (pcvr.GetInstance() != null)
+                        //    //{
+                        //    //    pcvr.GetInstance().AddDebugMsg("Unity: daysOffset == " + Mathf.Abs(daysOffset));
+                        //    //    pcvr.GetInstance().AddDebugMsg("Unity: serverTime == " + serverTime + ", systemTime == " + timeSystem);
+                        //    //}
 
-                            if (Mathf.Abs(daysOffset) > 1)
-                            {
-                                //系统与服务器日期信息不一致,请修改机器系统日期信息!
-                                if (SSUIRoot.GetInstance().m_GameUIManage != null)
-                                {
-                                    SSUIRoot.GetInstance().m_GameUIManage.CreatFixSystemTimeUI();
-                                }
-                            }
-                        }
+                        //    if (Mathf.Abs(daysOffset) > 1)
+                        //    {
+                        //        //系统与服务器日期信息不一致,请修改机器系统日期信息!
+                        //        if (SSUIRoot.GetInstance().m_GameUIManage != null)
+                        //        {
+                        //            SSUIRoot.GetInstance().m_GameUIManage.CreatFixSystemTimeUI();
+                        //        }
+                        //    }
+                        //}
                         break;
                     }
                 case PostCmd.WX_XCX_URL_POST:
@@ -1049,43 +1049,42 @@ public class SSBoxPostNet : MonoBehaviour
                                    scene：传入的boxNumber
                                    page：小程序码对应的小程序入口
                          */
-                        JsonData jd = JsonMapper.ToObject(getData.text);
-                        //m_BoxLoginRt = (BoxLoginRt)Convert.ToInt32(jd["code"].ToString());
-                        if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                        {
-                            if (m_BoxLoginData != null)
-                            {
-                                //获取游戏红点点后台屏幕码信息.
-                                //HttpSendGetGameScreenId();
+                        //JsonData jd = JsonMapper.ToObject(getData.text);
+                        //if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+                        //{
+                        //    if (m_BoxLoginData != null)
+                        //    {
+                        //        //获取游戏红点点后台屏幕码信息.
+                        //        //HttpSendGetGameScreenId();
 
-                                string scene = jd["data"]["scene"].ToString();
-                                string sceneTmp = m_BoxLoginData.boxNumber + "," + m_BoxLoginData.GetWXCodeGame(m_GamePadState);
-                                Debug.Log("Unity: scene == " + scene + ", sceneTmp ==== " + sceneTmp);
-                                if (sceneTmp == scene)
-                                {
-                                    //盒子编号和游戏代码信息一致.
-                                    //重新刷新微信虚拟手柄二维码.
-                                    string qrcodeUrl = jd["data"]["qrcodeUrl"].ToString();
-                                    string page = jd["data"]["page"].ToString();
-                                    Debug.Log("Unity: qrcodeUrl == " + qrcodeUrl + ", page == " + page);
+                        //        string scene = jd["data"]["scene"].ToString();
+                        //        string sceneTmp = m_BoxLoginData.boxNumber + "," + m_BoxLoginData.GetWXCodeGame(m_GamePadState);
+                        //        Debug.Log("Unity: scene == " + scene + ", sceneTmp ==== " + sceneTmp);
+                        //        if (sceneTmp == scene)
+                        //        {
+                        //            //盒子编号和游戏代码信息一致.
+                        //            //重新刷新微信虚拟手柄二维码.
+                        //            string qrcodeUrl = jd["data"]["qrcodeUrl"].ToString();
+                        //            string page = jd["data"]["page"].ToString();
+                        //            Debug.Log("Unity: qrcodeUrl == " + qrcodeUrl + ", page == " + page);
 
-                                    WeiXinXiaoChengXuData data = new WeiXinXiaoChengXuData();
-                                    data.qrcodeUrl = qrcodeUrl;
-                                    data.scene = scene;
-                                    data.page = page;
-                                    HttpRequestWeiXinXiaoChengXuErWeiMa(data);
-                                }
-                                else
-                                {
-                                    //盒子编号信息错误.
-                                    Debug.LogWarning("Unity: scene was wrong! scene ==== " + scene + ", sceneTmp == " + sceneTmp);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Debug.Log("Unity:" + "Get  WX_XCX_URL failed! code == " + jd["code"]);
-                        }
+                        //            WeiXinXiaoChengXuData data = new WeiXinXiaoChengXuData();
+                        //            data.qrcodeUrl = qrcodeUrl;
+                        //            data.scene = scene;
+                        //            data.page = page;
+                        //            HttpRequestWeiXinXiaoChengXuErWeiMa(data);
+                        //        }
+                        //        else
+                        //        {
+                        //            //盒子编号信息错误.
+                        //            Debug.LogWarning("Unity: scene was wrong! scene ==== " + scene + ", sceneTmp == " + sceneTmp);
+                        //        }
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    Debug.Log("Unity:" + "Get  WX_XCX_URL failed! code == " + jd["code"]);
+                        //}
                         break;
                     }
             }
@@ -1213,7 +1212,8 @@ public class SSBoxPostNet : MonoBehaviour
         
         PostDataHddSubPlayerMoney postDt = new PostDataHddSubPlayerMoney(userId, account);
         //"{\"memberId\":93124,\"account\":100}" //发送的消息.
-        string jsonData = JsonMapper.ToJson(postDt);
+        //string jsonData = JsonMapper.ToJson(postDt);
+        string jsonData = "";
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
 
         ThreadHttpSendPostHddSubPlayerMoney threadPostSubMoneyInfo = new ThreadHttpSendPostHddSubPlayerMoney(userId, this, url, postData);
@@ -1246,47 +1246,47 @@ public class SSBoxPostNet : MonoBehaviour
 
         internal void Run()
         {
-            Encoding encoding = Encoding.GetEncoding("utf-8");
-            HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
-            //打印返回值.
-            Stream stream = null; //获取响应的流.
+            //Encoding encoding = Encoding.GetEncoding("utf-8");
+            //HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
+            ////打印返回值.
+            //Stream stream = null; //获取响应的流.
 
-            try
-            {
-                //以字符流的方式读取HTTP响应.
-                stream = response.GetResponseStream();
-                StreamReader sr = new StreamReader(stream); //创建一个stream读取流
-                string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
-                //{"code":-1,"message":"该用户没有充值信息，不能扣款！"}
-                //{"code":0,"message":"成功","data":{"id":4,"openId":"oefFM5cqhWSws1BVxgzuLTLWKAnk","account":1,"memberId":93124}}
-                //SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> msg == " + msg);
+            //try
+            //{
+            //    //以字符流的方式读取HTTP响应.
+            //    stream = response.GetResponseStream();
+            //    StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+            //    string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+            //    //{"code":-1,"message":"该用户没有充值信息，不能扣款！"}
+            //    //{"code":0,"message":"成功","data":{"id":4,"openId":"oefFM5cqhWSws1BVxgzuLTLWKAnk","account":1,"memberId":93124}}
+            //    //SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> msg == " + msg);
 
-                JsonData jd = JsonMapper.ToObject(msg);
-                if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                {
-                    //红点点支付平台扣费成功.
-                    OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Success);
-                }
-                else
-                {
-                    //红点点支付平台扣费失败.
-                    //SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
-                    OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Failed);
-                }
-            }
-            finally
-            {
-                //释放资源.
-                if (stream != null)
-                {
-                    stream.Close();
-                }
+            //    JsonData jd = JsonMapper.ToObject(msg);
+            //    if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+            //    {
+            //        //红点点支付平台扣费成功.
+            //        OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Success);
+            //    }
+            //    else
+            //    {
+            //        //红点点支付平台扣费失败.
+            //        //SSDebug.Log("ThreadHttpSendPostHddSubPlayerMoney -> HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+            //        OnReceivedSendPostHddSubPlayerMoney(userId, BoxLoginRt.Failed);
+            //    }
+            //}
+            //finally
+            //{
+            //    //释放资源.
+            //    if (stream != null)
+            //    {
+            //        stream.Close();
+            //    }
 
-                if (response != null)
-                {
-                    response.Close();
-                }
-            }
+            //    if (response != null)
+            //    {
+            //        response.Close();
+            //    }
+            //}
         }
     }
 
@@ -1518,7 +1518,8 @@ public class SSBoxPostNet : MonoBehaviour
         PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode,
             prizeLevel, daiJinQuanName, xiangQingInfo, superPrize, prizeId, isLimit, startTime, endTime);
         //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
-        string jsonData = JsonMapper.ToJson(postDt);
+        //string jsonData = JsonMapper.ToJson(postDt);
+        string jsonData = "";
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
 
         ThreadHttpSendPostHddPlayerCouponInfo threadPostCouponInfo = new ThreadHttpSendPostHddPlayerCouponInfo(url, postData);
@@ -1670,7 +1671,8 @@ public class SSBoxPostNet : MonoBehaviour
         PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode,
             prizeLevel, daiJinQuanName, xiangQingInfo, superPrize, prizeId, isLimit, startTime, endTime);
         //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
-        string jsonData = JsonMapper.ToJson(postDt);
+        //string jsonData = JsonMapper.ToJson(postDt);
+        string jsonData = "";
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
 
         ThreadHttpSendPostHddPlayerCouponInfo threadPostCouponInfo = new ThreadHttpSendPostHddPlayerCouponInfo(url, postData);
@@ -1707,50 +1709,50 @@ public class SSBoxPostNet : MonoBehaviour
 
         internal void Run()
         {
-            Encoding encoding = Encoding.GetEncoding("utf-8");
-            //PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode, name, superPrize);
-            //"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
-            //string jsonData = JsonMapper.ToJson(postDt);
-            //byte[] postData = m_PostData;
-            HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
-            //打印返回值.
-            Stream stream = null; //获取响应的流.
+            //Encoding encoding = Encoding.GetEncoding("utf-8");
+            ////PostDataPlayerCouponInfo postDt = new PostDataPlayerCouponInfo(worth, boxId, userId, gameCode, screenCode, name, superPrize);
+            ////"{\"worth\":100,\"boxId\":\"123456\",\"userId\":93124}" //发送的消息.
+            ////string jsonData = JsonMapper.ToJson(postDt);
+            ////byte[] postData = m_PostData;
+            //HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
+            ////打印返回值.
+            //Stream stream = null; //获取响应的流.
 
-            try
-            {
-                //以字符流的方式读取HTTP响应.
-                stream = response.GetResponseStream();
-                StreamReader sr = new StreamReader(stream); //创建一个stream读取流
-                string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
-                SSDebug.Log("msg == " + msg);
-                //{"code":0,"message":"成功","data":{"id":4,"couponId":"36ecce4e-0b5c-4808-8284-18c1fad8bc27",
-                //"worth":100,"boxId":"408d5cbc1371leitingzhanche","createTime":"2018-10-27T03:41:43.025+0000",
-                //"userId":93124}}
+            //try
+            //{
+            //    //以字符流的方式读取HTTP响应.
+            //    stream = response.GetResponseStream();
+            //    StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+            //    string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+            //    SSDebug.Log("msg == " + msg);
+            //    //{"code":0,"message":"成功","data":{"id":4,"couponId":"36ecce4e-0b5c-4808-8284-18c1fad8bc27",
+            //    //"worth":100,"boxId":"408d5cbc1371leitingzhanche","createTime":"2018-10-27T03:41:43.025+0000",
+            //    //"userId":93124}}
 
-                JsonData jd = JsonMapper.ToObject(msg);
-                if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                {
-                    //红点点支付平台玩家代金券添加成功.
-                }
-                else
-                {
-                    //红点点支付平台玩家代金券添加失败.
-                    SSDebug.LogWarning("HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
-                }
-            }
-            finally
-            {
-                //释放资源.
-                if (stream != null)
-                {
-                    stream.Close();
-                }
+            //    JsonData jd = JsonMapper.ToObject(msg);
+            //    if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+            //    {
+            //        //红点点支付平台玩家代金券添加成功.
+            //    }
+            //    else
+            //    {
+            //        //红点点支付平台玩家代金券添加失败.
+            //        SSDebug.LogWarning("HttpSendPostHddSubPlayerMoney failed! code == " + jd["code"]);
+            //    }
+            //}
+            //finally
+            //{
+            //    //释放资源.
+            //    if (stream != null)
+            //    {
+            //        stream.Close();
+            //    }
 
-                if (response != null)
-                {
-                    response.Close();
-                }
-            }
+            //    if (response != null)
+            //    {
+            //        response.Close();
+            //    }
+            //}
         }
     }
     
@@ -1934,7 +1936,8 @@ public class SSBoxPostNet : MonoBehaviour
         
         PostDataPlayerLogin postDt = new PostDataPlayerLogin(gameCode, screenCode, memberId, userName, fuFeiStata);
         //"{\"gameCode\":1,\"screenCode\":10155,\"memberId\":94180}" //发送的消息.
-        string jsonData = JsonMapper.ToJson(postDt);
+        //string jsonData = JsonMapper.ToJson(postDt);
+        string jsonData = "";
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
         ThreadHttpSendPostHddPlayerLoginGameInfo threadPostPlayerLoginGameInfo = new ThreadHttpSendPostHddPlayerLoginGameInfo(userId, url, postData);
         if (threadPostPlayerLoginGameInfo != null)
@@ -1966,48 +1969,48 @@ public class SSBoxPostNet : MonoBehaviour
 
         internal void Run()
         {
-            Encoding encoding = Encoding.GetEncoding("utf-8");
-            HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
-            //打印返回值.
-            Stream stream = null; //获取响应的流.
+            //Encoding encoding = Encoding.GetEncoding("utf-8");
+            //HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
+            ////打印返回值.
+            //Stream stream = null; //获取响应的流.
 
-            try
-            {
+            //try
+            //{
 
-                //以字符流的方式读取HTTP响应.
-                stream = response.GetResponseStream();
-                StreamReader sr = new StreamReader(stream); //创建一个stream读取流
-                string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
-                SSDebug.Log("ThreadHttpSendPostHddPlayerLoginGameInfo::run -> msg == " + msg);
-                //{"code":0,"message":"成功",
-                //"data":{"id":2032,"memberId":94180,"screenCode":10155,"gameCode":1,"memberName":"Allen","isFree":"首次免费","loginTime":"2019-02-18 13:31:01"}}
+            //    //以字符流的方式读取HTTP响应.
+            //    stream = response.GetResponseStream();
+            //    StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+            //    string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+            //    SSDebug.Log("ThreadHttpSendPostHddPlayerLoginGameInfo::run -> msg == " + msg);
+            //    //{"code":0,"message":"成功",
+            //    //"data":{"id":2032,"memberId":94180,"screenCode":10155,"gameCode":1,"memberName":"Allen","isFree":"首次免费","loginTime":"2019-02-18 13:31:01"}}
 
-                JsonData jd = JsonMapper.ToObject(msg);
-                if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                {
-                    //红点点支付平台玩家的登录游戏状态信息发送成功.
-                    int id = Convert.ToInt32(jd["data"]["id"].ToString());
-                    AddPostUserLoginReceiveData(userId, id);
-                }
-                else
-                {
-                    //红点点支付平台玩家的登录游戏状态信息发送失败.
-                    SSDebug.LogWarning("ThreadHttpSendPostHddPlayerLoginGameInfo failed! code == " + jd["code"]);
-                }
-            }
-            finally
-            {
-                //释放资源.
-                if (stream != null)
-                {
-                    stream.Close();
-                }
+            //    JsonData jd = JsonMapper.ToObject(msg);
+            //    if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+            //    {
+            //        //红点点支付平台玩家的登录游戏状态信息发送成功.
+            //        int id = Convert.ToInt32(jd["data"]["id"].ToString());
+            //        AddPostUserLoginReceiveData(userId, id);
+            //    }
+            //    else
+            //    {
+            //        //红点点支付平台玩家的登录游戏状态信息发送失败.
+            //        SSDebug.LogWarning("ThreadHttpSendPostHddPlayerLoginGameInfo failed! code == " + jd["code"]);
+            //    }
+            //}
+            //finally
+            //{
+            //    //释放资源.
+            //    if (stream != null)
+            //    {
+            //        stream.Close();
+            //    }
 
-                if (response != null)
-                {
-                    response.Close();
-                }
-            }
+            //    if (response != null)
+            //    {
+            //        response.Close();
+            //    }
+            //}
         }
     }
 
@@ -2115,7 +2118,8 @@ public class SSBoxPostNet : MonoBehaviour
         PostDataPlayerPlayGameTime postDt = new PostDataPlayerPlayGameTime(userLoginDt.id, time);
         //SSDebug.Log("HttpSendPostUserPlayGameTimeInfo -> postDt == " + postDt.ToString());
         //"{\"id\":2560,\"gameTime\":60}" //发送的消息.
-        string jsonData = JsonMapper.ToJson(postDt);
+        //string jsonData = JsonMapper.ToJson(postDt);
+        string jsonData = "";
         byte[] postData = Encoding.UTF8.GetBytes(jsonData);
         
         ThreadHttpSendPostHddPlayerGameTimeInfo threadPostGameTimeInfo = new ThreadHttpSendPostHddPlayerGameTimeInfo(url, postData);
@@ -2146,42 +2150,42 @@ public class SSBoxPostNet : MonoBehaviour
 
         internal void Run()
         {
-            Encoding encoding = Encoding.GetEncoding("utf-8");
-            HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
-            //打印返回值.
-            Stream stream = null; //获取响应的流.
+            //Encoding encoding = Encoding.GetEncoding("utf-8");
+            //HttpWebResponse response = PostHttpResponse.CreatePostHttpResponse(m_Url, m_PostData, encoding);
+            ////打印返回值.
+            //Stream stream = null; //获取响应的流.
 
-            try
-            {
-                //以字符流的方式读取HTTP响应.
-                stream = response.GetResponseStream();
-                StreamReader sr = new StreamReader(stream); //创建一个stream读取流
-                string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
-                //SSDebug.Log("HttpSendPostUserPlayGameTimeInfo -> msg == " + msg);
-                JsonData jd = JsonMapper.ToObject(msg);
-                if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
-                {
-                    //红点点支付平台玩家游戏时长消息发送成功.
-                }
-                else
-                {
-                    //红点点支付平台玩家游戏时长消息发送失败.
-                    SSDebug.LogWarning("ThreadHttpSendPostHddPlayerGameTimeInfo failed! code == " + jd["code"]);
-                }
-            }
-            finally
-            {
-                //释放资源.
-                if (stream != null)
-                {
-                    stream.Close();
-                }
+            //try
+            //{
+            //    //以字符流的方式读取HTTP响应.
+            //    stream = response.GetResponseStream();
+            //    StreamReader sr = new StreamReader(stream); //创建一个stream读取流
+            //    string msg = sr.ReadToEnd();   //从头读到尾，放到字符串html
+            //    //SSDebug.Log("HttpSendPostUserPlayGameTimeInfo -> msg == " + msg);
+            //    JsonData jd = JsonMapper.ToObject(msg);
+            //    if (Convert.ToInt32(jd["code"].ToString()) == (int)BoxLoginRt.Success)
+            //    {
+            //        //红点点支付平台玩家游戏时长消息发送成功.
+            //    }
+            //    else
+            //    {
+            //        //红点点支付平台玩家游戏时长消息发送失败.
+            //        SSDebug.LogWarning("ThreadHttpSendPostHddPlayerGameTimeInfo failed! code == " + jd["code"]);
+            //    }
+            //}
+            //finally
+            //{
+            //    //释放资源.
+            //    if (stream != null)
+            //    {
+            //        stream.Close();
+            //    }
 
-                if (response != null)
-                {
-                    response.Close();
-                }
-            }
+            //    if (response != null)
+            //    {
+            //        response.Close();
+            //    }
+            //}
         }
     }
 
@@ -2366,7 +2370,8 @@ public class SSBoxPostNet : MonoBehaviour
         Debug.Log("HttpRequestWeiXinXiaoChengXuErWeiMa -> page  ==== " + postdata.page);
         Debug.Log("HttpRequestWeiXinXiaoChengXuErWeiMa -> width  ==== " + postdata.width);
 
-        string str = JsonMapper.ToJson(postdata);
+        //string str = JsonMapper.ToJson(postdata);
+        string str = "";
         byte[] postData = Encoding.UTF8.GetBytes(str);
         HttpWebResponse response = null;
         try
