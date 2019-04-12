@@ -264,7 +264,17 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 System.TimeSpan ts2 = new System.TimeSpan(timeRecord.Ticks);
                 System.TimeSpan ts = ts2.Subtract(ts1).Duration();
 
-                int dTime = ts.Hours * 3600 + ts.Minutes * 60 + ts.Seconds;
+                //int dTime = ts.Hours * 3600 + ts.Minutes * 60 + ts.Seconds;
+                int dTime = (int)ts.TotalSeconds; //时间差的秒数信息.
+                if (ts.TotalMinutes > XKGlobalData.GetInstance().m_TimeMianFeiNum)
+                {
+                    dTime = (XKGlobalData.GetInstance().m_TimeMianFeiNum + 1) * 60; //时间间隔已经足够.
+                }
+                else
+                {
+                    dTime = (int)ts.TotalSeconds; //时间间隔秒数.
+                }
+
                 int minTime = XKGlobalData.GetInstance().m_TimeMianFeiNum * 60; //秒.
                 if (dTime > minTime)
                 {
@@ -347,6 +357,11 @@ namespace Assets.XKGame.Script.HongDDGamePad
             /// 免费试玩生命次数.
             /// </summary>
             public int MianFeiShiWanCount = 0;
+            public GameConfigData()
+            {
+                MianFeiShiWanCount = 0;
+                MianFeiShiWanCount = 1; //test
+            }
         }
         /// <summary>
         /// 游戏在后台服务器的配置信息.

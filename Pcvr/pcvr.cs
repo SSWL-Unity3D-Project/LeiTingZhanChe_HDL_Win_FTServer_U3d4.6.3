@@ -66,10 +66,10 @@ public class pcvr : MonoBehaviour
         return Instance;
     }
 
-    void FixedUpdateTest()
-    {
-        UpdateStartLedState();
-    }
+    //void FixedUpdateTest()
+    //{
+    //    UpdateStartLedState();
+    //}
 
     #region pcvr 游戏彩票管理
     /// <summary>

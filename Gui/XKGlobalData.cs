@@ -1019,7 +1019,8 @@ public class XKGlobalData
     /// <summary>
     /// 对于每个用户下次免费游戏的间隔时间(单位是分钟).
     /// </summary>
-    internal int m_TimeMianFeiNum = 20;
+    //internal int m_TimeMianFeiNum = 20;
+    internal int m_TimeMianFeiNum = 1; //test
     internal void SetTimeMianFeiNum(int time)
     {
         if (time < 1 || time > 1440)

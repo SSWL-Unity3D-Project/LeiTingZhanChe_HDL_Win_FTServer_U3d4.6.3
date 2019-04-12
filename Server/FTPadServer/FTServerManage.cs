@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using GClientLib;
 using System.Collections;
+using System.Net.NetworkInformation;
 
 namespace Server.FTPadServer
 {
@@ -13,22 +14,32 @@ namespace Server.FTPadServer
     public class FTServerManage : MonoBehaviour
     {
         public UnityEngine.UI.Image img;
-        public Text ptext;
-        internal List<string> MsgList;
-        public UnityEngine.UI.Image puser;
+        //public Text ptext;
+        /// <summary>
+        /// 纷腾服务器消息缓存容器.
+        /// </summary>
+        List<string> MsgList;
+        /// <summary>
+        /// 纷腾服务器手柄方向消息缓存容器.
+        /// </summary>
+        List<string> MsgListDirection;
+        /// <summary>
+        /// 纷腾服务器手柄按键消息缓存容器.
+        /// </summary>
+        List<string> MsgListButton;
+        //public UnityEngine.UI.Image puser;
         SocketLib dll_MainLib;
-        byte[] buffer;
-        Sprite temp;
-        Transform tuser;
+        //byte[] buffer;
+        //Sprite temp;
+        //Transform tuser;
         private string nSessionGuid;
-        Vector2 Vector2d;
         public string SessionID
         {
             get { return nSessionGuid; }
             set { nSessionGuid = value; }
         }
-        private string sGlobalNum = "";
 
+        private string sGlobalNum = "";
         public string GlobalNum
         {
             get { return sGlobalNum; }
@@ -69,12 +80,22 @@ namespace Server.FTPadServer
         //public delegate void MyDelegate();
         //public MyDelegate _MsgBox;
 
+        bool IsInit = false;
         /// <summary>
         /// 初始化.
         /// </summary>
         void Init()
         {
-            CreatFTServerInterface();
+            if (m_FTServerInterface == null)
+            {
+                CreatFTServerInterface();
+            }
+
+            if (IsInit == true)
+            {
+                return;
+            }
+            IsInit = true;
             InitInfo();
             StartCoroutine(DelayLinkServer());
         }
@@ -120,10 +141,38 @@ namespace Server.FTPadServer
                 return;
             }
 
-            string systemInfo = "";
-            systemInfo = dll_MainLib.GetSystemInfoString();
+            string defaultPcMac = "000000000000";
+            string boxNum = defaultPcMac;
+#if UNITY_STANDALONE_WIN
+            try
+            {
+                bool isFindLocalAreaConnection = false;
+                NetworkInterface[] nis = NetworkInterface.GetAllNetworkInterfaces();
+                foreach (NetworkInterface ni in nis)
+                {
+                    if (ni.Name == "本地连接" || ni.Name == "Local Area Connection")
+                    {
+                        isFindLocalAreaConnection = true;
+                        boxNum = ni.GetPhysicalAddress().ToString();
+                        break;
+                    }
+                }
+
+                if (isFindLocalAreaConnection == false)
+                {
+                    SSDebug.LogWarning("RegLocal -> not find local area connection!");
+                }
+            }
+            catch (Exception ex)
+            {
+                SSDebug.LogWarning("RegLocal -> Mac get error! ex == " + ex);
+            }
+#endif
+
+            string systemInfo = boxNum;
+            //systemInfo = dll_MainLib.GetSystemInfoString();
             dll_MainLib.GC_SendCommand("REG", systemInfo);
-            Debug.Log("REG:" + systemInfo);
+            SSDebug.Log("RegLocal -> systemInfo == " + systemInfo);
         }
 
         /// <summary>
@@ -133,7 +182,6 @@ namespace Server.FTPadServer
         {
             sArguement = sArguement.Replace("\r\n", "");
             A_ShowMessage(sArguement);
-            //Debug.Log(System.DateTime.Now.ToString() + ":" + sArguement + "\n");
 
             string s = sArguement;
             string[] sagr;
@@ -142,59 +190,34 @@ namespace Server.FTPadServer
             {
                 switch (sagr[0])
                 {
-                    case "Q2CODE":
-                        //二维码信息返回.
-                        try
-                        {
-                            buffer = dll_MainLib.GC_GetQRCodeBitmap(sagr[1], 100, 100);
-                        }
-                        catch (Exception e)
-                        {
-
-                            Debug.LogError(e.Message);
-                        }
-                        break;
                     case "REGOK":
-                        //注册成功.
-                        if (sagr.Length >= 1)
                         {
-                            SessionID = sagr[1];
+                            //注册成功.
+                            if (sagr.Length >= 1)
+                            {
+                                SessionID = sagr[1];
+                            }
+                            if (sagr.Length >= 2)
+                            {
+                                GlobalNum = sagr[2];
+                            }
+                            //获取二维码数据.
+                            dll_MainLib.GC_SendCommand("Q2CODE", GlobalNum);
+                            break;
                         }
-                        if (sagr.Length >= 2)
-                        {
-                            GlobalNum = sagr[2];
-                        }
-                        dll_MainLib.GC_SendCommand("Q2CODE", GlobalNum);
-                        break;
-                    case "DATA":
-                        //手机游戏手柄数据信息.
-                        //if (Vector2d.x<= Screen.width)
-                        {
-                            Vector2d.x = float.Parse(sagr[3]) / 1.0f;
-                        }
-                        //if (Vector2d.y <= Screen.height)
-                        {
-                            Vector2d.y = float.Parse(sagr[4]) / -1.0f;
-                        }
-                        if (sagr[3] == "0" && sagr[4] == "0")
-                        {
-                            //Vector2d.x = 0.0f;
-                            //Vector2d.y = 100.0f;
-                        }
-                        break;
                     case "TEST":
-                        if (sagr.Length >= 4)
                         {
-                            dll_MainLib.GC_SendCommand("TEST", sagr[1] + " " + GlobalNum + " " + sagr[3]);
+                            //测试.
+                            if (sagr.Length >= 4)
+                            {
+                                dll_MainLib.GC_SendCommand("TEST", sagr[1] + " " + GlobalNum + " " + sagr[3]);
+                            }
+                            else
+                            {
+                                dll_MainLib.GC_SendCommand("TEST", sagr[1] + " " + GlobalNum + " " + sagr[sagr.Length - 1]);
+                            }
+                            break;
                         }
-                        else
-                        {
-                            dll_MainLib.GC_SendCommand("TEST", sagr[1] + " " + GlobalNum + " " + sagr[sagr.Length - 1]);
-                        }
-                        break;
-
-                    default:
-                        break;
                 }
             }
         }
@@ -224,20 +247,259 @@ namespace Server.FTPadServer
             A_ShowMessage("Dll连接关闭");
         }
 
-        private void A_ShowMessage(string s)
+        private void A_ShowMessage(string msg)
         {
-            MsgList.Add(s);
-            //ShowMsg(s);
+            if (msg == null || msg.Length < 1)
+            {
+                return;
+            }
+
+            countTest++;
+            string s = msg;
+            string[] args;
+            args = s.Split(',');
+            if (args.Length < 1)
+            {
+                return;
+            }
+
+            switch (args[0])
+            {
+                case "DATA":
+                    {
+                        //DATA,374b1b26-ea3c-4669-aaca-7e42dc799c0e,move,-32,109
+                        //DATA,374b1b26-ea3c-4669-aaca-7e42dc799c0e,button,0
+                        if (args.Length > 2)
+                        {
+                            string key = args[2];
+                            if (key == "move")
+                            {
+                                if (MsgListDirection != null)
+                                {
+                                    MsgListDirection.Add(msg);
+                                }
+                            }
+                            else if (key == "button")
+                            {
+                                if (MsgListButton != null)
+                                {
+                                    MsgListButton.Add(msg);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        if (MsgList != null)
+                        {
+                            MsgList.Add(msg);
+                        }
+                        break;
+                    }
+            }
         }
 
-        public void ShowMsg(string s)
+        void ShowMsg(string s)
         {
-            SSDebug.Log("ShowMsg -> msg == " + s);
-            if (ptext != null)
+            //SSDebug.Log("ShowMsg -> msg == " + s);
+            //if (ptext != null)
+            //{
+            //    ptext.text = System.DateTime.Now.ToString() + ":" + s + "\n";
+            //}
+            OnReceivedMsgFromFTServer(s);
+        }
+
+        /// <summary>
+        /// 当收到纷腾服务器的回传消息.
+        /// </summary>
+        void OnReceivedMsgFromFTServer(string args)
+        {
+            if (args == null || args.Length < 1)
             {
-                ptext.text = System.DateTime.Now.ToString() + ":" + s + "\n";
+                return;
             }
-            //this.Invoke("ShowText",0.01f);
+            //SSDebug.Log("OnReceivedMsgFromFTServer -> msg == " + args);
+
+            string[] sagr = args.Split(',');
+            if (sagr.Length >= 1)
+            {
+                switch (sagr[0])
+                {
+                    case "LOGIN":
+                        {
+                            //玩家登录手柄消息.
+                            OnReceivedPlayerLoginMsg(sagr);
+                            break;
+                        }
+                    case "DATA":
+                        {
+                            //玩家手柄操作消息.
+                            OnReceivedPlayerPadMsg(sagr);
+                            break;
+                        }
+                    case "WEBSESSION_CLOSE":
+                        {
+                            //玩家退出手柄消息.
+                            OnReceivedPlayerExit(sagr);
+                            break;
+                        }
+                    case "Q2CODE":
+                        {
+                            //收到游戏二维码数据消息.
+                            OnReceivedGameErWeiMaMsg(sagr);
+                            break;
+                        }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 收到玩家手柄登录消息.
+        /// </summary>
+        void OnReceivedPlayerLoginMsg(string[] args)
+        {
+            //会话id信息是当玩家每次登录后产生的.
+            //LOGIN,会话id信息,机器特征码,玩家id,玩家昵称
+            //LOGIN,374b1b26-ea3c-4669-aaca-7e42dc799c0e,43142003142014402211616555881165971,id,name
+            //玩家登录消息.
+            if (args.Length >= 3)
+            {
+                int id = 0;
+                string name = "";
+                string sex = "";
+                string headUrl = "";
+                id = 123;
+                name = "test";
+                sex = "1";
+                WebSocketSimpet.PlayerWeiXinData playerDt = new WebSocketSimpet.PlayerWeiXinData();
+                playerDt.sex = sex;
+                playerDt.headUrl = headUrl;
+                playerDt.userName = name;
+                playerDt.userId = id;
+                if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                {
+                    pcvr.GetInstance().m_HongDDGamePadInterface.OnPlayerLoginFromFTServer(playerDt);
+
+                    //测试,暂时当收到登录消息后直接发送开始按键消息.
+                    StartCoroutine(TestDelaySendClickStartBtMsg(id));
+                }
+            }
+        }
+
+        IEnumerator TestDelaySendClickStartBtMsg(int id)
+        {
+            yield return new WaitForSeconds(2f);
+            if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+            {
+                //测试,暂时当收到登录消息后直接发送开始按键消息.
+                //开始按键消息.
+                string startBtDown = Assets.XKGame.Script.HongDDGamePad.HongDDGamePad.PlayerShouBingFireBt.startGameBtDown.ToString();
+                pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveActionOperationMsgFTServer(startBtDown, id);
+            }
+        }
+
+        /// <summary>
+        /// 收到玩家手柄操作消息.
+        /// </summary>
+        void OnReceivedPlayerPadMsg(string[] args)
+        {
+            //DATA,374b1b26-ea3c-4669-aaca-7e42dc799c0e,move,-32,109
+            //DATA,374b1b26-ea3c-4669-aaca-7e42dc799c0e,button,0
+            if (args.Length < 3)
+            {
+                return;
+            }
+
+            int id = 0; //玩家id信息.
+            id = 123;
+
+            string key = args[2];
+            switch (key)
+            {
+                case "move":
+                    {
+                        //手柄方向数据消息.
+                        //采用向量方式将收到的手柄坐标信息转换为方向信息.
+                        //    -1
+                        //-1      1
+                        //     1
+                        //DATA,374b1b26-ea3c-4669-aaca-7e42dc799c0e,move,-32,109
+                        if (args.Length >= 5)
+                        {
+                            float px = Assets.XKGame.Script.Comm.MathConverter.StringToFloat(args[3]);
+                            float py = Assets.XKGame.Script.Comm.MathConverter.StringToFloat(args[4]);
+                            if (px == py && px == 0f)
+                            {
+                                //玩家手指离开方向.
+                                string angle = Assets.XKGame.Script.HongDDGamePad.HongDDGamePad.PlayerShouBingDir.up.ToString();
+                                if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                                {
+                                    pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveDirectionAngleMsgFTServer(angle, id);
+                                }
+                            }
+                            else
+                            {
+                                Vector2 vP0 = new Vector2(-1f, 0f);
+                                Vector2 vP1 = new Vector2(px, py);
+                                vP1 = vP1.normalized;
+                                float cosVal = Vector2.Dot(vP0, vP1);
+                                float sign = py > 0f ? -1f : 1f; //方向向下时角度为负数,方向向上时角度为正数.
+                                float angle = sign * Mathf.Acos(cosVal) * Mathf.Rad2Deg;
+                                //SSDebug.Log("angle =================== " + angle);
+                                if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                                {
+                                    pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveDirectionAngleMsgFTServer(angle.ToString(), id);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                case "button":
+                    {
+                        //手柄按键消息.
+                        if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
+                        {
+                            //发射按键消息.
+                            string fireBtDown = Assets.XKGame.Script.HongDDGamePad.HongDDGamePad.PlayerShouBingFireBt.fireBDown.ToString();
+                            pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveActionOperationMsgFTServer(fireBtDown, id);
+                        }
+                        break;
+                    }
+            }
+        }
+        
+        /// <summary>
+        /// 收到玩家退出手柄消息.
+        /// </summary>
+        void OnReceivedPlayerExit(string[] args)
+        {
+            //WEBSESSION_CLOSE,374b1b26-ea3c-4669-aaca-7e42dc799c0e,ClientClosing
+        }
+
+        /// <summary>
+        /// 收到游戏二维码数据消息.
+        /// </summary>
+        void OnReceivedGameErWeiMaMsg(string[] args)
+        {
+            //二维码信息返回.
+            try
+            {
+                if (args.Length > 1)
+                {
+                    byte[] buffer = dll_MainLib.GC_GetQRCodeBitmap(args[1], 100, 100);
+                    OnReceivedErWeiMaData(buffer);
+                }
+                else
+                {
+                    SSDebug.LogWarning("OnReceivedGameErWeiMaMsg -> args was wrong!");
+                }
+            }
+            catch (Exception e)
+            {
+
+                SSDebug.LogError(e.Message);
+            }
         }
 
         // Use this for initialization
@@ -268,13 +530,24 @@ namespace Server.FTPadServer
             if (MsgList == null)
             {
                 MsgList = new List<string>();
+                MsgListButton = new List<string>();
+                MsgListDirection = new List<string>();
             }
         }
 
-        // Update is called once per frame
-        void Update()
+        /// <summary>
+        /// 循环询问消息池.
+        /// </summary>
+        void FixedUpdate()
         {
             ShowText();
+        }
+
+        /// <summary>
+        /// 收到二位码数据.
+        /// </summary>
+        void OnReceivedErWeiMaData(byte[] buffer)
+        {
             if (buffer != null && buffer.Length > 1)
             {
                 //将二维码像素列表信息转换为图片.
@@ -285,26 +558,51 @@ namespace Server.FTPadServer
 
                 if (img != null)
                 {
-                    temp = Sprite.Create(tx, new Rect(0, 0, tx.width, tx.height), new Vector2(0, 0));
-                    img.sprite = temp;
+                    //二维码测试.
+                    img.sprite = Sprite.Create(tx, new Rect(0, 0, tx.width, tx.height), new Vector2(0, 0));
                 }
-            }
-
-            if (tuser != null)
-            {
-                tuser.localPosition = Vector2d;
             }
         }
 
+        int countTest = 0;
         public void ShowText()
         {
-            string s;
             if (MsgList.Count > 0)
             {
-                s = MsgList[0];
+                string s = MsgList[0];
                 ShowMsg(s);
                 MsgList.RemoveAt(0);
             }
+
+            if (MsgListButton.Count > 0)
+            {
+                string s = MsgListButton[0];
+                ShowMsg(s);
+                MsgListButton.RemoveAt(0);
+            }
+
+            if (MsgListDirection.Count > 0)
+            {
+                ShowMsg(MsgListDirection[MsgListDirection.Count - 1]);
+                //string s = MsgListDirection[0];
+                //ShowMsg(s);
+                MsgListDirection.RemoveAt(0);
+            }
+        }
+
+        private void OnGUI()
+        {
+            if (MsgList == null)
+            {
+                return;
+            }
+
+            GUI.Box(new Rect(15f, 30f, 500f, 25f), "");
+            string info = "msgCount: " + MsgList.Count
+                + ", msgDirCount: " + MsgListDirection.Count
+                + ", msgBtCount: " + MsgListButton.Count
+                + ", countTest: " + countTest;
+            GUI.Label(new Rect(15f, 30f, 500f, 25f), info);
         }
 
         #region 服务器消息管理.

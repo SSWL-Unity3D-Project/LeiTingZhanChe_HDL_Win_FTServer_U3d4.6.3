@@ -15,9 +15,9 @@ namespace Assets.XKGame.Script.HongDDGamePad
     {
         #region 红点点微信虚拟游戏手柄控制单元
         /// <summary>
-        /// 是否为红点点微信手柄操作模式.
+        /// 是否为虚拟游戏手柄操作模式.
         /// </summary>
-        private bool IsHongDDShouBing
+        private bool IsXuNiPhoneShouBing
         {
             get { return pcvr.IsXuNiPhoneShouBing; }
         }
@@ -111,7 +111,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_GmWXLoginDt[i] = new GameWeiXinLoginData();
             }
 
-            if (IsHongDDShouBing == true)
+            if (IsXuNiPhoneShouBing == true)
             {
                 //创建游戏盒子登陆控制组件.
                 GameObject websocketObj = SpawnWebSocketBox(transform);
@@ -123,7 +123,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 m_BarcodeCam = gameObject.AddComponent<BarcodeCam>();
             }
             
-            if (IsHongDDShouBing == true)
+            if (IsXuNiPhoneShouBing == true)
             {
                 if (m_WeiXinShouBinType == WeiXinShouBingEnum.XianXiaTVBan)
                 {
@@ -138,7 +138,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 }
             }
 
-            if (IsHongDDShouBing == true)
+            if (IsXuNiPhoneShouBing == true)
             {
                 if (m_SSBoxPostNet != null)
                 {
@@ -618,7 +618,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// <summary>
         /// 红点点微信手柄发射按键.
         /// </summary>
-        enum PlayerShouBingFireBt
+        public enum PlayerShouBingFireBt
         {
             fireXDown,
             fireYDown,
@@ -635,7 +635,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// <summary>
         /// 红点点微信手柄方向.
         /// </summary>
-        enum PlayerShouBingDir
+        public enum PlayerShouBingDir
         {
             up = 0, //没有操作方向盘(手指离开摇杆).
             DirLeft = 1,
@@ -967,7 +967,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
             else
             {
-                if (!IsHongDDShouBing)
+                if (!IsXuNiPhoneShouBing)
                 {
                     //软件版本测试用,模拟微信手柄登陆.
                     SetGmWXloginDtGamePadType(index, GamePadType.Null);
@@ -1203,7 +1203,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
             //    return;
             //}
 
-            //Debug.Log("Unity:"+"pcvr::OnEventActionOperation -> userId " + userId + ", val " + val);
+            SSDebug.Log("HongDDGamePad::OnEventActionOperation -> userId " + userId + ", val " + val);
             //GamePlayerData playerDt = FindGamePlayerData(userId);
             GamePlayerData playerDt = FindGamePlayerDataByDictionary(userId);
             if (playerDt == null)
@@ -1492,7 +1492,8 @@ namespace Assets.XKGame.Script.HongDDGamePad
 #if TEST_DEBUG_PLAYER_PAD_INFO
                         OnReceivePlayerPadDirInfo(playerDt.Index, Convert.ToInt32(dirValStr));
 #endif
-                        int val = Convert.ToInt32(dirValStr);
+                        //int val = Convert.ToInt32(dirValStr);
+                        float val = Comm.MathConverter.StringToFloat(dirValStr);
                         if (val >= -22.5f && val < 22.5f)
                         {
                             dirVal = 1;
@@ -3417,6 +3418,64 @@ namespace Assets.XKGame.Script.HongDDGamePad
                 && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
             {
                 m_SSBoxPostNet.m_WebSocketSimpet.OnXiTiaoMsgTimeOutFromWangLuoGuZhang();
+            }
+        }
+        #endregion
+
+        #region 纷腾手机虚拟游戏手柄接口管理
+        /// <summary>
+        /// 玩家从纷腾服务器登陆游戏.
+        /// </summary>
+        internal void OnPlayerLoginFromFTServer(WebSocketSimpet.PlayerWeiXinData playerDt)
+        {
+            if (m_SSBoxPostNet != null
+                && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                //收到玩家登录消息.
+                m_SSBoxPostNet.m_WebSocketSimpet.OnNetReceivePlayerLoginBoxMsg(playerDt);
+            }
+        }
+
+        /// <summary>
+        /// 玩家从纷腾服务器退出游戏.
+        /// </summary>
+        internal void OnPlayerExitFromFTServer(int userId)
+        {
+            if (m_SSBoxPostNet != null
+                && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                //收到玩家退出消息.
+                m_SSBoxPostNet.m_WebSocketSimpet.OnNetReceivePlayerExitBoxMsg(userId);
+            }
+        }
+        
+        /// <summary>
+        /// 收到玩家操作手柄的方向信息从纷腾服务器.
+        /// </summary>
+        internal void OnReceiveDirectionAngleMsgFTServer(string val, int userId)
+        {
+            if (m_SSBoxPostNet != null
+                && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                //收到玩家退出消息.
+                m_SSBoxPostNet.m_WebSocketSimpet.OnNetReceiveDirectionAngleMsg(val, userId);
+            }
+        }
+
+        /// <summary>
+        /// 收到玩家操作手柄的按键信息从纷腾服务器.
+        /// </summary>
+        internal void OnReceiveActionOperationMsgFTServer(string val, int userId)
+        {
+            if (m_SSBoxPostNet != null
+                && m_SSBoxPostNet.m_WebSocketSimpet != null
+                && m_SSBoxPostNet.m_GamePayPlatform == SSBoxPostNet.GamePayPlatform.HongDianDian)
+            {
+                //收到玩家退出消息.
+                m_SSBoxPostNet.m_WebSocketSimpet.OnNetReceiveActionOperationMsg(val, userId);
             }
         }
         #endregion

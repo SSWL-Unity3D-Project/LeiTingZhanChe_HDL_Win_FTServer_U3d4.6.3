@@ -366,5 +366,57 @@ namespace Assets.XKGame.Script.HongDDGamePad
             }
         }
         #endregion
+
+        #region 纷腾手机虚拟游戏手柄接口管理
+        /// <summary>
+        /// 玩家从纷腾服务器登陆游戏.
+        /// </summary>
+        internal void OnPlayerLoginFromFTServer(WebSocketSimpet.PlayerWeiXinData playerDt)
+        {
+            if (playerDt == null)
+            {
+                SSDebug.LogWarning("OnPlayerLoginFromFTServer -> playerDt was null");
+                return;
+            }
+
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.OnPlayerLoginFromFTServer(playerDt);
+            }
+        }
+
+        /// <summary>
+        /// 玩家从纷腾服务器退出游戏.
+        /// </summary>
+        internal void OnPlayerExitFromFTServer(int userId)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.OnPlayerExitFromFTServer(userId);
+            }
+        }
+
+        /// <summary>
+        /// 收到玩家操作手柄的方向信息从纷腾服务器.
+        /// </summary>
+        internal void OnReceiveDirectionAngleMsgFTServer(string val, int userId)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.OnReceiveDirectionAngleMsgFTServer(val, userId);
+            }
+        }
+
+        /// <summary>
+        /// 收到玩家操作手柄的按键信息从纷腾服务器.
+        /// </summary>
+        internal void OnReceiveActionOperationMsgFTServer(string val, int userId)
+        {
+            if (m_HongDDGamePadCom != null)
+            {
+                m_HongDDGamePadCom.OnReceiveActionOperationMsgFTServer(val, userId);
+            }
+        }
+        #endregion
     }
 }

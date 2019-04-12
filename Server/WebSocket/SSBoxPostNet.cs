@@ -94,12 +94,8 @@ public class SSBoxPostNet : MonoBehaviour
         {
             m_WebSocketSimpet.Init(this);
         }
-        HttpSendPostLoginBox();
-        //获取微信红点点游戏手柄小程序二维码.
-        //HttpSendGetWeiXinXiaoChengXuUrl();
-        //获取服务器的时间信息
-        //HttpSendGetServerTimeInfo();
-        //Debug.Log("Unity:"+"md5: " + Md5Sum("23456sswl"));
+        //发送盒子登陆消息.
+        //HttpSendPostLoginBox();
     }
 
     void InitGameVersionInfo()
