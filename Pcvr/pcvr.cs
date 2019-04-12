@@ -12,9 +12,9 @@ public class pcvr : MonoBehaviour
 	
     #region 红点点微信虚拟游戏手柄控制单元
     /// <summary>
-    /// 是否为红点点微信手柄操作模式.
+    /// 是否为手机虚拟游戏手柄操作模式.
     /// </summary>
-    public static bool IsHongDDShouBing = true;
+    public static bool IsXuNiPhoneShouBing = true;
 
     /// <summary>
     /// 红点点微信虚拟游戏手柄控制接口.

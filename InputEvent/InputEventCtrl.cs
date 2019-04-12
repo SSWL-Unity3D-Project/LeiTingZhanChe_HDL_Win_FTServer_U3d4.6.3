@@ -885,7 +885,7 @@ public class InputEventCtrl : MonoBehaviour
         //发布出来的游戏不允许用键盘进行投币.
         if (Input.GetKeyUp(KeyCode.T))
         {
-            if (pcvr.IsHongDDShouBing)
+            if (pcvr.IsXuNiPhoneShouBing)
             {
                 //红点点微信二维码游戏.
                 if (XkGameCtrl.GetIsActivePlayer(PlayerEnum.PlayerOne) == false)
@@ -909,7 +909,7 @@ public class InputEventCtrl : MonoBehaviour
 
 		if (Input.GetKeyUp(KeyCode.Y))
         {
-            if (pcvr.IsHongDDShouBing)
+            if (pcvr.IsXuNiPhoneShouBing)
             {
                 //红点点微信二维码游戏.
                 if (XkGameCtrl.GetIsActivePlayer(PlayerEnum.PlayerTwo) == false)
@@ -933,7 +933,7 @@ public class InputEventCtrl : MonoBehaviour
 		
 		if (Input.GetKeyUp(KeyCode.U))
         {
-            if (pcvr.IsHongDDShouBing)
+            if (pcvr.IsXuNiPhoneShouBing)
             {
                 //红点点微信二维码游戏.
                 if (XkGameCtrl.GetIsActivePlayer(PlayerEnum.PlayerThree) == false)

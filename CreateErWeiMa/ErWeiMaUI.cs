@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Server.FTPadServer;
+using System.Collections;
 using UnityEngine;
 
 public class ErWeiMaUI : MonoBehaviour
@@ -36,37 +37,63 @@ public class ErWeiMaUI : MonoBehaviour
     void Start()
     {
         //_Instance = this;
-        if (pcvr.IsHongDDShouBing == false)
+        if (pcvr.IsXuNiPhoneShouBing == false)
         {
-            //不是红点点微信手柄版本游戏.
+            //不是手机虚拟游戏手柄版本.
+            return;
+        }
+        //先隐藏二维码.
+        SetActive(false);
+        //创建纷腾服务器管理组件.
+        FTServerManage.CreateFTServerManage();
+        FTServerManage.GetInstance().m_FTServerInterface.OnEventErWeiMaLoad += OnEventErWeiMaLoad;
+
+        //switch (pcvr.GetInstance().m_HongDDGamePadInterface.GetWXShouBingType())
+        //{
+        //    case SSBoxPostNet.WeiXinShouBingEnum.H5:
+        //        {
+        //            LoadGameWXPadH5ErWeiMa();
+        //            break;
+        //        }
+        //    case SSBoxPostNet.WeiXinShouBingEnum.XiaoChengXu:
+        //        {
+        //            if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam() != null
+        //                && pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg != null)
+        //            {
+        //                //直接加载微信小程序二维码.
+        //                ReloadGameWXPadXiaoChengXuErWeiMa();
+        //                //SSDebug.Log("Loading WeiXinErWeiMa....................................111 loadLeval == " + Application.loadedLevel);
+        //            }
+        //            else
+        //            {
+        //                //先隐藏二维码.
+        //                SetActive(false);
+        //                //SSDebug.Log("Loading WeiXinErWeiMa....................................222 loadLeval == " + Application.loadedLevel);
+        //            }
+        //            break;
+        //        }
+        //}
+    }
+
+    /// <summary>
+    /// 二维码加载之后的事件响应.
+    /// </summary>
+    private void OnEventErWeiMaLoad(Texture2D val)
+    {
+        //二维码加载好了.
+        if (val == null)
+        {
+            SSDebug.LogWarning("OnEventErWeiMaLoad -> val was null");
             return;
         }
 
-        switch (pcvr.GetInstance().m_HongDDGamePadInterface.GetWXShouBingType())
+        if (m_ErWeiMaUI == null)
         {
-            case SSBoxPostNet.WeiXinShouBingEnum.H5:
-                {
-                    LoadGameWXPadH5ErWeiMa();
-                    break;
-                }
-            case SSBoxPostNet.WeiXinShouBingEnum.XiaoChengXu:
-                {
-                    if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam() != null
-                        && pcvr.GetInstance().m_HongDDGamePadInterface.GetBarcodeCam().m_ErWeuMaImg != null)
-                    {
-                        //直接加载微信小程序二维码.
-                        ReloadGameWXPadXiaoChengXuErWeiMa();
-                        //SSDebug.Log("Loading WeiXinErWeiMa....................................111 loadLeval == " + Application.loadedLevel);
-                    }
-                    else
-                    {
-                        //先隐藏二维码.
-                        SetActive(false);
-                        //SSDebug.Log("Loading WeiXinErWeiMa....................................222 loadLeval == " + Application.loadedLevel);
-                    }
-                    break;
-                }
+            SSDebug.LogWarning("OnEventErWeiMaLoad -> m_ErWeiMaUI was null");
+            return;
         }
+        m_ErWeiMaUI.mainTexture = val;
+        SetActive(true);
     }
 
     /// <summary>
@@ -82,7 +109,7 @@ public class ErWeiMaUI : MonoBehaviour
 
         try
         {
-            if (pcvr.IsHongDDShouBing)
+            if (pcvr.IsXuNiPhoneShouBing)
             {
                 if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet() != null)
                 {
@@ -124,7 +151,7 @@ public class ErWeiMaUI : MonoBehaviour
 
         try
         {
-            if (pcvr.IsHongDDShouBing)
+            if (pcvr.IsXuNiPhoneShouBing)
             {
                 SSBoxPostNet boxCom = pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet();
                 if (boxCom != null)

@@ -68,7 +68,7 @@ public class SSGameUICtrl : SSGameMono
 
     private void Start()
     {
-        if (pcvr.IsHongDDShouBing)
+        if (pcvr.IsXuNiPhoneShouBing)
         {
             //红点点微信二维码游戏.
             if (pcvr.GetInstance().m_HongDDGamePadInterface.GetBoxPostNet() != null)

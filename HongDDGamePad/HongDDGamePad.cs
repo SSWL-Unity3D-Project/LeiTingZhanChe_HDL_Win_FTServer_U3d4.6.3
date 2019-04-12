@@ -19,7 +19,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         private bool IsHongDDShouBing
         {
-            get { return pcvr.IsHongDDShouBing; }
+            get { return pcvr.IsXuNiPhoneShouBing; }
         }
         /// <summary>
         /// 微信头像url.

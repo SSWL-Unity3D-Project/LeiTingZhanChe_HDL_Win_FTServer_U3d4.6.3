@@ -178,7 +178,7 @@ public class XueKuangCtrl : MonoBehaviour
         int indexVal = isActive == true ? 1 : 0;
         CoinDiKuang.mainTexture = CoinDKTexture[indexVal];
 
-        if (pcvr.IsHongDDShouBing)
+        if (pcvr.IsXuNiPhoneShouBing)
         {
             if (XKGlobalData.GameVersionPlayer == 0)
             {

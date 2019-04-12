@@ -194,7 +194,7 @@ public class PlayerXueTiaoCtrl : MonoBehaviour
             m_MatNum.mainTexture = m_PlayerNumImg;
         }
 #else
-        if (pcvr.IsHongDDShouBing)
+        if (pcvr.IsXuNiPhoneShouBing)
         {
             int indexVal = (int)PlayerSt - 1;
             string wxHeadUrl = pcvr.GetInstance().m_HongDDGamePadInterface.GetPlayerHeadUrl(indexVal);

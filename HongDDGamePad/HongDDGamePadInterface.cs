@@ -18,7 +18,7 @@ namespace Assets.XKGame.Script.HongDDGamePad
         /// </summary>
         internal void CreatHongDDGanePad()
         {
-            if (pcvr.IsHongDDShouBing == true)
+            if (pcvr.IsXuNiPhoneShouBing == true)
             {
                 m_HongDDGamePadCom = gameObject.AddComponent<HongDDGamePad>();
                 if (m_HongDDGamePadCom != null)
