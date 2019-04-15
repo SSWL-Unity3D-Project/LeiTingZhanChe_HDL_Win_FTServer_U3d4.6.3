@@ -355,6 +355,89 @@ namespace Server.FTPadServer
         }
 
         /// <summary>
+        /// 玩家数据信息.
+        /// </summary>
+        [Serializable]
+        public class PlayerData
+        {
+            /// <summary>
+            /// 当前登录玩家的会话id.
+            /// </summary>
+            public string huiHuaId = "";
+            /// <summary>
+            /// 玩家Id.
+            /// </summary>
+            public int userId = 0;
+            /// <summary>
+            /// 玩家昵称.
+            /// </summary>
+            internal string name = "";
+            /// <summary>
+            /// 玩家性别.
+            /// </summary>
+            internal string sex = "";
+            /// <summary>
+            /// 玩家头像url.
+            /// </summary>
+            internal string headUrl = "";
+        }
+        /// <summary>
+        /// 登录游戏的玩家数据信息列表.
+        /// </summary>
+        public List<PlayerData> m_LoginPlayerDt = new List<PlayerData>();
+
+        /// <summary>
+        /// 查找玩家游戏数据.
+        /// </summary>
+        PlayerData FindGamePlayerData(string huiHuaId)
+        {
+            PlayerData playerDt = m_LoginPlayerDt.Find((dt) =>
+            {
+                return dt.huiHuaId.Equals(huiHuaId);
+            });
+            return playerDt;
+        }
+
+        /// <summary>
+        /// 查找玩家游戏数据.
+        /// </summary>
+        PlayerData FindGamePlayerData(int userId)
+        {
+            PlayerData playerDt = m_LoginPlayerDt.Find((dt) =>
+            {
+                return dt.userId.Equals(userId);
+            });
+            return playerDt;
+        }
+        
+        /// <summary>
+        /// 添加玩家微信数据信息.
+        /// </summary>
+        void AddGamePlayerData(PlayerData playerDt)
+        {
+            if (playerDt != null && m_LoginPlayerDt != null)
+            {
+                if (FindGamePlayerData(playerDt.userId) == null)
+                {
+                    m_LoginPlayerDt.Add(playerDt);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除玩家微信数据信息.
+        /// </summary>
+        internal void RemoveGamePlayerData(int userId)
+        {
+            PlayerData playerDt = FindGamePlayerData(userId);
+            if (playerDt != null)
+            {
+                m_LoginPlayerDt.Remove(playerDt);
+            }
+        }
+
+        int userIdTest = 0; //测试用户id信息.
+        /// <summary>
         /// 收到玩家手柄登录消息.
         /// </summary>
         void OnReceivedPlayerLoginMsg(string[] args)
@@ -365,29 +448,43 @@ namespace Server.FTPadServer
             //玩家登录消息.
             if (args.Length >= 3)
             {
-                int id = 0;
+                int userId = 0;
                 string name = "";
                 string sex = "";
                 string headUrl = "";
-                id = 123;
+                userIdTest++;
+                userId = userIdTest;
                 name = "test";
                 sex = "1";
-                WebSocketSimpet.PlayerWeiXinData playerDt = new WebSocketSimpet.PlayerWeiXinData();
-                playerDt.sex = sex;
-                playerDt.headUrl = headUrl;
-                playerDt.userName = name;
-                playerDt.userId = id;
+
+                if (FindGamePlayerData(userId) == null)
+                {
+                    //添加玩家数据.
+                    PlayerData playerDt = new PlayerData();
+                    playerDt.huiHuaId = args[1];
+                    playerDt.userId = userId;
+                    playerDt.name = name;
+                    playerDt.sex = sex;
+                    playerDt.headUrl = headUrl;
+                    AddGamePlayerData(playerDt);
+                }
+
+                WebSocketSimpet.PlayerWeiXinData playerWeiXinDt = new WebSocketSimpet.PlayerWeiXinData();
+                playerWeiXinDt.sex = sex;
+                playerWeiXinDt.headUrl = headUrl;
+                playerWeiXinDt.userName = name;
+                playerWeiXinDt.userId = userId;
                 if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
                 {
-                    pcvr.GetInstance().m_HongDDGamePadInterface.OnPlayerLoginFromFTServer(playerDt);
+                    pcvr.GetInstance().m_HongDDGamePadInterface.OnPlayerLoginFromFTServer(playerWeiXinDt);
 
                     //测试,暂时当收到登录消息后直接发送开始按键消息.
-                    StartCoroutine(TestDelaySendClickStartBtMsg(id));
+                    StartCoroutine(TestDelaySendClickStartBtMsg(userId));
                 }
             }
         }
 
-        IEnumerator TestDelaySendClickStartBtMsg(int id)
+        IEnumerator TestDelaySendClickStartBtMsg(int userId)
         {
             yield return new WaitForSeconds(2f);
             if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
@@ -395,7 +492,7 @@ namespace Server.FTPadServer
                 //测试,暂时当收到登录消息后直接发送开始按键消息.
                 //开始按键消息.
                 string startBtDown = Assets.XKGame.Script.HongDDGamePad.HongDDGamePad.PlayerShouBingFireBt.startGameBtDown.ToString();
-                pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveActionOperationMsgFTServer(startBtDown, id);
+                pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveActionOperationMsgFTServer(startBtDown, userId);
             }
         }
 
@@ -411,8 +508,18 @@ namespace Server.FTPadServer
                 return;
             }
 
-            int id = 0; //玩家id信息.
-            id = 123;
+            int userId = 0; //玩家id信息.
+            //userId = 123;
+            string huiHuaId = args[1];
+            PlayerData playerDt = FindGamePlayerData(huiHuaId);
+            if (playerDt != null)
+            {
+                userId = playerDt.userId;
+            }
+            else
+            {
+                return;
+            }
 
             string key = args[2];
             switch (key)
@@ -435,7 +542,7 @@ namespace Server.FTPadServer
                                 string angle = Assets.XKGame.Script.HongDDGamePad.HongDDGamePad.PlayerShouBingDir.up.ToString();
                                 if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
                                 {
-                                    pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveDirectionAngleMsgFTServer(angle, id);
+                                    pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveDirectionAngleMsgFTServer(angle, userId);
                                 }
                             }
                             else
@@ -449,7 +556,7 @@ namespace Server.FTPadServer
                                 //SSDebug.Log("angle =================== " + angle);
                                 if (pcvr.GetInstance().m_HongDDGamePadInterface != null)
                                 {
-                                    pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveDirectionAngleMsgFTServer(angle.ToString(), id);
+                                    pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveDirectionAngleMsgFTServer(angle.ToString(), userId);
                                 }
                             }
                         }
@@ -462,7 +569,7 @@ namespace Server.FTPadServer
                         {
                             //发射按键消息.
                             string fireBtDown = Assets.XKGame.Script.HongDDGamePad.HongDDGamePad.PlayerShouBingFireBt.fireBDown.ToString();
-                            pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveActionOperationMsgFTServer(fireBtDown, id);
+                            pcvr.GetInstance().m_HongDDGamePadInterface.OnReceiveActionOperationMsgFTServer(fireBtDown, userId);
                         }
                         break;
                     }
